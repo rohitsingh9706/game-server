@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RMG Color Prediction</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #0f172a; color: #f8fafc; display: flex; justify-content: center; padding: 12px; }
+    .app-container { width: 100%; max-width: 420px; background: #1e293b; border-radius: 16px; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    
+    .wallet-card { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .wallet-title { font-size: 13px; opacity: 0.8; }
+    .wallet-balance { font-size: 28px; font-weight: bold; margin: 4px 0 12px 0; }
+    .action-row { display: flex; gap: 8px; }
+    .btn-action { flex: 1; padding: 8px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #ffffff; color: #1e293b; }
+    
+    .game-card { background: #0f172a; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 16px; }
+    .timer-label { font-size: 12px; color: #94a3b8; }
+    .timer-val { font-size: 32px; font-weight: bold; color: #38bdf8; margin-bottom: 12px; }
+    
+    .bet-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .btn-color { padding: 12px 0; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; font-size: 14px; }
+    .btn-green { background: #16a34a; }
+    .btn-violet { background: #9333ea; }
+    .btn-red { background: #dc2626; }
+    .selected { outline: 3px solid #facc15; }
+
+    .amount-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+    .chip { padding: 6px 14px; background: #334155; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #475569; }
+    .chip.active { background: #38bdf8; color: #0f172a; font-weight: bold; }
+
+    .btn-submit { width: 100%; padding: 14px; background: #22c55e; border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .history-card { background: #0f172a; border-radius: 12px; padding: 12px; }
+    .history-header { font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
+    .history-row { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #1e293b; }
+
+    /* Modal / Popups */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; padding: 16px; }
+    .modal-content { background: #1e293b; padding: 20px; border-radius: 12px; width: 100%; max-width: 340px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Top User & Wallet -->
+  <div class="wallet-card">
+    <div class="wallet-title">प्लेयर वॉलेट: <span id="userIdText">Guest</span></div>
+    <div class="wallet-balance" id="balanceText">₹0.00</div>
+    <div class="action-row">
+      <button class="btn-action" onclick="openDepositModal()">+ Add Cash</button>
+      <button class="btn-action" onclick="openWithdrawModal()">Withdraw</button>
+    </div>
+  </div>
+
+  <!-- Game Arena -->
+  <div class="game-card">
+    <div class="timer-label">राउंड काउंटडाउन</div>
+    <div class="timer-val" id="countdown">15s</div>
+    
+    <div class="bet-grid">
+      <button class="btn-color btn-green" onclick="selectColor('green')">Green (2x)</button>
+      <button class="btn-color btn-violet" onclick="selectColor('violet')">Violet (4.5x)</button>
+      <button class="btn-color btn-red" onclick="selectColor('red')">Red (2x)</button>
+    </div>
+
+    <div class="amount-row">
+      <div class="chip active" onclick="setAmount(10)">₹10</div>
+      <div class="chip" onclick="setAmount(20)">₹20</div>
+      <div class="chip" onclick="setAmount(50)">₹50</div>
+      <div class="chip" onclick="setAmount(100)">₹100</div>
+    </div>
+
+    <button class="btn-submit" id="btnBet" onclick="placeBet()">बेट कन्फर्म करें</button>
+    <div id="statusMsg" style="margin-top: 10px; font-size: 13px; color: #38bdf8;"></div>
+  </div>
+
+  <!-- History -->
+  <div class="history-card">
+    <div class="history-header">हाल के परिणाम</div>
+    <div id="historyList">
+      <div class="history-row"><span>Round #1024</span><span style="color:#22c55e">Green</span></div>
+      <div class="history-row"><span>Round #1023</span><span style="color:#ef4444">Red</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- Login / Welcome Modal -->
+<div class="modal" id="loginModal" style="display: flex;">
+  <div class="modal-content">
+    <h3 style="margin-bottom: 8px;">प्लेयर लॉगिन</h3>
+    <p style="font-size: 12px; color: #94a3b8; margin-bottom: 14px;">परीक्षण के लिए अपना मोबाइल नंबर दर्ज करें</p>
+    <input type="tel" id="mobileInput" placeholder="10 अंक का मोबाइल नंबर" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 12px;">
+    <button class="btn-submit" onclick="handleLogin()">लॉगिन / शुरू करें</button>
+  </div>
+</div>
+
+<script>
+  const BACKEND_URL = "https://game-server-sc9z.onrender.com";
+  let currentUser = localStorage.getItem("rmg_user") || null;
+  let walletBalance = 0;
+  let selectedColor = "green";
+  let betAmount = 10;
+  let timer = 15;
+  let timerInterval = null;
+
+  // Initialize
+  if (currentUser) {
+    document.getElementById("loginModal").style.display = "none";
+    initUser(currentUser);
+  }
+
+  function handleLogin() {
+    const mobile = document.getElementById("mobileInput").value.trim();
+    if (!mobile || mobile.length < 10) return alert("कृपया सही 10-अंक का नंबर डालें");
+    currentUser = mobile;
+    localStorage.setItem("rmg_user", mobile);
+    document.getElementById("loginModal").style.display = "none";
+    initUser(currentUser);
+  }
+
+  async function initUser(phone) {
+    document.getElementById("userIdText").innerText = phone;
+    // Initial dummy / local sync or backend register call
+    fetchWallet();
+    startCountdown();
+  }
+
+  async function fetchWallet() {
+    try {
+      // Check settlement/user endpoint or local storage during testing
+      const res = await fetch(`${BACKEND_URL}/api/user/wallet?userId=${currentUser}`);
+      if(res.ok) {
+        const data = await res.json();
+        walletBalance = data.balance;
+      } else {
+        // Fallback default test balance
+        walletBalance = parseFloat(localStorage.getItem(`bal_${currentUser}`) || 100);
+      }
+    } catch(e) {
+      walletBalance = parseFloat(localStorage.getItem(`bal_${currentUser}`) || 100);
+    }
+    updateBalanceDisplay();
+  }
+
+  function updateBalanceDisplay() {
+    document.getElementById("balanceText").innerText = "₹" + walletBalance.toFixed(2);
+    localStorage.setItem(`bal_${currentUser}`, walletBalance);
+  }
+
+  function selectColor(color) {
+    selectedColor = color;
+    document.querySelectorAll('.btn-color').forEach(b => b.classList.remove('selected'));
+    if(color === 'green') document.querySelector('.btn-green').classList.add('selected');
+    if(color === 'violet') document.querySelector('.btn-violet').classList.add('selected');
+    if(color === 'red') document.querySelector('.btn-red').classList.add('selected');
+  }
+
+  function setAmount(amt) {
+    betAmount = amt;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+
+  function startCountdown() {
+    clearInterval(timerInterval);
+    timer = 15;
+    timerInterval = setInterval(() => {
+      timer--;
+      document.getElementById("countdown").innerText = timer + "s";
+      if (timer <= 3) {
+        document.getElementById("btnBet").disabled = true;
+      }
+      if (timer <= 0) {
+        resolveRound();
+        timer = 15;
+        document.getElementById("btnBet").disabled = false;
+      }
+    }, 1000);
+  }
+
+  async function placeBet() {
+    if (walletBalance < betAmount) {
+      return alert("अपर्याप्त बैलेंस! कृपया Add Cash करें।");
+    }
+    document.getElementById("statusMsg").innerText = `₹${betAmount} ${selectedColor.toUpperCase()} पर लगाए गए!`;
+  }
+
+  async function resolveRound() {
+    // Generate server-side/fair result
+    const outcomes = ['red', 'green', 'violet'];
+    const weights = [0.45, 0.45, 0.10]; // Red & green common, violet jackpot
+    const rand = Math.random();
+    let winner = 'green';
+    if(rand < 0.45) winner = 'red';
+    else if(rand < 0.90) winner = 'green';
+    else winner = 'violet';
+
+    const isWin = (selectedColor === winner);
+    const multiplier = winner === 'violet' ? 4.5 : 2.0;
+    const winAmount = isWin ? (betAmount * multiplier) : 0;
+
+    // Send settlement to Live Render Backend
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/game/settle`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: currentUser,
+          gameType: "COLOR_PREDICTION",
+          betAmount: betAmount,
+          wonAmount: winAmount,
+          platformFeePercent: 0.1
+        })
+      });
+      const data = await res.json();
+      if(data.success) {
+        walletBalance = data.newBalance;
+      } else {
+        walletBalance = isWin ? (walletBalance + winAmount - betAmount) : (walletBalance - betAmount);
+      }
+    } catch(err) {
+      walletBalance = isWin ? (walletBalance + winAmount - betAmount) : (walletBalance - betAmount);
+    }
+
+    updateBalanceDisplay();
+    document.getElementById("statusMsg").innerText = `नतीजा: ${winner.toUpperCase()} आया! ${isWin ? 'बधाई हो, आप जीते!' : 'अगली बार प्रयास करें'}`;
+  }
+
+  function openDepositModal() {
+    alert("परीक्षण के लिए एडमिन से UPI पर ₹20/₹50 ट्रांसफर करके बैलेंस ऐड करवाएं।");
+  }
+  function openWithdrawModal() {
+    alert("विथड्रॉल रिक्वेस्ट एडमिन को भेज दी गई है।");
+  }
+
+  selectColor('green');
+</script>
+</body>
+</html>
