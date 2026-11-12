@@ -8,110 +8,108 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
     body {
-      background: #120826; color: #fff; width: 100vw; height: 100vh; overflow: hidden;
+      background: #0b041c; color: #fff; width: 100vw; height: 100vh; overflow: hidden;
       display: flex; justify-content: center; align-items: center;
     }
 
-    /* Rotate Device Warning for Portrait Mobile */
-    #rotateWarning {
-      display: none; position: fixed; inset: 0; background: #0f0722; z-index: 99999;
-      flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;
-    }
-    @media screen and (orientation: portrait) and (max-width: 768px) {
-      #rotateWarning { display: flex; }
+    /* Main Game Viewport - Auto Rotates to Landscape on Vertical Screens */
+    .viewport {
+      width: 100vw; height: 100vh;
+      background: radial-gradient(circle at 50% 30%, #2e1065 0%, #170936 60%, #0b041c 100%);
+      position: relative; overflow: hidden;
     }
 
-    /* Main Game Viewport */
-    .viewport {
-      width: 100%; height: 100%; max-width: 960px; max-height: 480px;
-      background: radial-gradient(circle at 50% 30%, #2e1065 0%, #170936 60%, #0b041c 100%);
-      position: relative; overflow: hidden; box-shadow: 0 0 50px rgba(0,0,0,0.9);
+    @media screen and (orientation: portrait) {
+      .viewport {
+        width: 100vh;
+        height: 100vw;
+        transform: rotate(90deg);
+        transform-origin: center center;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        margin-top: -50vw;
+        margin-left: -50vh;
+      }
     }
 
     /* ================= 1. ROYAL LOBBY SCREEN ================= */
     #lobbyScreen { width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 8px 14px; }
 
-    .lobby-top { display: flex; justify-content: space-between; align-items: center; height: 48px; }
+    .lobby-top { display: flex; justify-content: space-between; align-items: center; height: 44px; }
     .profile-pill {
       display: flex; align-items: center; gap: 8px;
       background: linear-gradient(90deg, #3b0764, #1e1b4b); border: 1.5px solid #f59e0b;
-      border-radius: 30px; padding: 3px 14px 3px 4px;
+      border-radius: 30px; padding: 2px 14px 2px 4px;
     }
     .p-avatar {
-      width: 36px; height: 36px; border-radius: 50%; background: #f59e0b;
-      display: flex; justify-content: center; align-items: center; font-size: 20px; border: 2px solid #fef08a;
+      width: 34px; height: 34px; border-radius: 50%; background: #f59e0b;
+      display: flex; justify-content: center; align-items: center; font-size: 18px; border: 2px solid #fef08a;
     }
     .vip-badge { background: linear-gradient(90deg, #38bdf8, #2563eb); font-size: 9px; padding: 1px 6px; border-radius: 8px; font-weight: 800; }
-    .bal-display { color: #fde047; font-weight: 800; font-size: 14px; }
+    .bal-display { color: #fde047; font-weight: 800; font-size: 13px; }
 
-    .top-icons { display: flex; gap: 14px; align-items: center; }
-    .top-icon-btn { text-align: center; cursor: pointer; font-size: 10px; color: #fde68a; font-weight: 700; }
-    .top-icon-btn div { font-size: 20px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)); }
+    .top-icons { display: flex; gap: 12px; align-items: center; }
+    .top-icon-btn { text-align: center; cursor: pointer; font-size: 9px; color: #fde68a; font-weight: 700; }
+    .top-icon-btn div { font-size: 18px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6)); }
 
-    /* Live Withdrawal Card Top Right */
     .live-withdraw-card {
       background: linear-gradient(90deg, #581c87, #86198f); border: 1.5px solid #f0abfc;
-      border-radius: 24px; padding: 3px 12px 3px 4px; display: flex; align-items: center; gap: 6px;
+      border-radius: 24px; padding: 2px 12px 2px 4px; display: flex; align-items: center; gap: 6px;
       box-shadow: 0 0 15px rgba(217, 70, 239, 0.5);
     }
 
-    /* Ticker Strip */
     .mid-ticker {
       background: rgba(0, 0, 0, 0.55); border-top: 1px solid rgba(251,191,36,0.3); border-bottom: 1px solid rgba(251,191,36,0.3);
-      padding: 3px 12px; font-size: 11px; color: #fde047; text-align: center; width: 65%; margin: 0 auto; border-radius: 20px;
+      padding: 2px 12px; font-size: 10px; color: #fde047; text-align: center; width: 70%; margin: 0 auto; border-radius: 20px;
     }
 
-    /* Lobby Center Content */
-    .lobby-center { display: flex; gap: 10px; flex: 1; margin: 6px 0; align-items: center; }
+    .lobby-center { display: flex; gap: 10px; flex: 1; margin: 5px 0; align-items: center; min-height: 0; }
     .left-sidebar {
-      width: 68px; height: 100%; background: rgba(30, 27, 75, 0.7); border: 1px solid #6366f1;
+      width: 64px; height: 100%; background: rgba(30, 27, 75, 0.7); border: 1px solid #6366f1;
       border-radius: 14px; display: flex; flex-direction: column; justify-content: space-around; align-items: center; padding: 4px;
     }
-    .side-item { text-align: center; font-size: 9px; font-weight: 700; color: #fde68a; cursor: pointer; }
-    .side-item span { display: block; font-size: 18px; }
+    .side-item { text-align: center; font-size: 8px; font-weight: 700; color: #fde68a; cursor: pointer; }
+    .side-item span { display: block; font-size: 16px; }
 
-    /* Big Teen Patti Hero Banner */
     .hero-tp-card {
-      width: 175px; height: 100%; border-radius: 18px;
+      width: 155px; height: 100%; border-radius: 18px;
       background: linear-gradient(180deg, #6d28d9 0%, #3b0764 60%, #1e1b4b 100%);
       border: 2.5px solid #fbbf24; position: relative; cursor: pointer;
       display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-      padding: 10px; box-shadow: 0 0 25px rgba(251, 191, 36, 0.4); transition: transform 0.15s;
+      padding: 8px; box-shadow: 0 0 25px rgba(251, 191, 36, 0.4); transition: transform 0.15s;
     }
     .hero-tp-card:active { transform: scale(0.96); }
     .hot-tag {
       position: absolute; top: -2px; right: -2px; background: linear-gradient(90deg, #ef4444, #b91c1c);
-      padding: 2px 10px; border-radius: 0 14px 0 14px; font-size: 11px; font-weight: 800; border: 1px solid #fde047;
+      padding: 2px 8px; border-radius: 0 14px 0 14px; font-size: 10px; font-weight: 800; border: 1px solid #fde047;
     }
-    .hero-art { font-size: 64px; margin-top: 12px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.7)); }
+    .hero-art { font-size: 52px; margin-top: 8px; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.7)); }
     .hero-title {
-      font-size: 24px; font-weight: 900; line-height: 1; text-align: center;
+      font-size: 20px; font-weight: 900; line-height: 1; text-align: center;
       background: linear-gradient(180deg, #ffffff, #fde047); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 2px 2px #000);
     }
 
-    /* 4x2 Mini Game Grid */
-    .games-matrix { flex: 1; height: 100%; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; }
+    .games-matrix { flex: 1; height: 100%; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 7px; }
     .mini-tile {
-      border-radius: 14px; border: 1.5px solid rgba(255,255,255,0.25); position: relative;
+      border-radius: 12px; border: 1.5px solid rgba(255,255,255,0.25); position: relative;
       display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-      padding: 6px 4px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.15s;
+      padding: 5px 4px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); transition: transform 0.15s;
     }
     .mini-tile:active { transform: scale(0.95); }
     .tile-players { position: absolute; top: 3px; right: 5px; font-size: 8px; color: #fde047; font-weight: 700; }
-    .tile-icon { font-size: 30px; margin-top: 8px; }
-    .tile-label { font-size: 11px; font-weight: 800; text-shadow: 0 2px 3px #000; }
+    .tile-icon { font-size: 24px; margin-top: 6px; }
+    .tile-label { font-size: 10px; font-weight: 800; text-shadow: 0 2px 3px #000; }
 
-    /* Bottom Dock */
-    .lobby-bottom { display: flex; justify-content: space-between; align-items: center; height: 46px; }
-    .bottom-nav { display: flex; gap: 16px; }
-    .nav-btn { text-align: center; font-size: 9px; font-weight: 700; color: #e2e8f0; cursor: pointer; }
-    .nav-btn div { font-size: 18px; }
+    .lobby-bottom { display: flex; justify-content: space-between; align-items: center; height: 42px; }
+    .bottom-nav { display: flex; gap: 14px; }
+    .nav-btn { text-align: center; font-size: 8px; font-weight: 700; color: #e2e8f0; cursor: pointer; }
+    .nav-btn div { font-size: 16px; }
     .btn-add-cash-royal {
       background: linear-gradient(180deg, #38bdf8 0%, #1d4ed8 50%, #312e81 100%);
-      border: 2px solid #fde047; border-radius: 16px; padding: 6px 22px;
-      font-size: 15px; font-weight: 900; color: #fde047; cursor: pointer;
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.6); text-shadow: 0 2px 2px #000;
+      border: 2px solid #fde047; border-radius: 14px; padding: 5px 18px;
+      font-size: 13px; font-weight: 900; color: #fde047; cursor: pointer;
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.6);
     }
 
     /* ================= 2. ROOM LIST SCREEN ================= */
@@ -119,24 +117,24 @@
       display: none; width: 100%; height: 100%; padding: 10px 18px;
       flex-direction: column; background: radial-gradient(circle at top, #1e1b4b, #090d16);
     }
-    .room-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .room-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
     .btn-circle-back {
-      width: 36px; height: 36px; border-radius: 50%; background: #3b0764; border: 1.5px solid #fbbf24;
-      color: #fbbf24; font-size: 18px; font-weight: bold; cursor: pointer;
+      width: 34px; height: 34px; border-radius: 50%; background: #3b0764; border: 1.5px solid #fbbf24;
+      color: #fbbf24; font-size: 16px; font-weight: bold; cursor: pointer;
     }
     .room-table-head {
-      display: grid; grid-template-columns: 1fr 1.2fr 1fr 1fr; padding: 4px 16px;
-      font-size: 11px; color: #cbd5e1; font-weight: 600;
+      display: grid; grid-template-columns: 1fr 1.2fr 1fr 1fr; padding: 3px 16px;
+      font-size: 10px; color: #cbd5e1; font-weight: 600;
     }
-    .room-rows { flex: 1; display: flex; flex-direction: column; gap: 7px; overflow-y: auto; }
+    .room-rows { flex: 1; display: flex; flex-direction: column; gap: 6px; overflow-y: auto; }
     .room-row {
       background: linear-gradient(90deg, #ede9fe, #ddd6fe); color: #1e1b4b;
-      border-radius: 10px; padding: 7px 16px; display: grid; grid-template-columns: 1fr 1.2fr 1fr 1fr;
-      align-items: center; font-weight: 800; font-size: 14px;
+      border-radius: 10px; padding: 6px 16px; display: grid; grid-template-columns: 1fr 1.2fr 1fr 1fr;
+      align-items: center; font-weight: 800; font-size: 13px;
     }
     .btn-play-now {
       background: linear-gradient(180deg, #22c55e, #15803d); color: white; border: none;
-      padding: 6px 14px; border-radius: 8px; font-weight: 800; font-size: 12px; cursor: pointer;
+      padding: 5px 12px; border-radius: 8px; font-weight: 800; font-size: 11px; cursor: pointer;
       box-shadow: 0 3px 0 #14532d; justify-self: end;
     }
 
@@ -149,98 +147,89 @@
       position: absolute; top: 8px; left: 12px; right: 12px; z-index: 20;
       display: flex; justify-content: space-between; align-items: center;
     }
-    .mode-pill { background: rgba(0,0,0,0.55); padding: 4px 12px; border-radius: 14px; font-size: 11px; color: #e2e8f0; }
+    .mode-pill { background: rgba(0,0,0,0.55); padding: 3px 12px; border-radius: 14px; font-size: 10px; color: #e2e8f0; }
 
-    /* Female Dealer Top Center */
     .dealer-avatar {
-      position: absolute; top: 6px; left: 50%; transform: translateX(-50%); z-index: 15;
-      width: 66px; height: 66px; border-radius: 50%; background: linear-gradient(180deg, #f59e0b, #78350f);
+      position: absolute; top: 4px; left: 50%; transform: translateX(-50%); z-index: 15;
+      width: 58px; height: 58px; border-radius: 50%; background: linear-gradient(180deg, #f59e0b, #78350f);
       border: 2.5px solid #fde047; display: flex; justify-content: center; align-items: center;
-      font-size: 40px; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+      font-size: 34px; box-shadow: 0 4px 15px rgba(0,0,0,0.8);
     }
 
-    /* Royal Blue Felt Oval Table */
     .oval-table {
-      position: absolute; top: 54px; left: 11%; right: 11%; bottom: 54px;
+      position: absolute; top: 48px; left: 12%; right: 12%; bottom: 48px;
       background: radial-gradient(ellipse at center, #3b82f6 0%, #1d4ed8 55%, #1e3a8a 100%);
-      border: 9px solid #78350f; outline: 2.5px solid #fbbf24;
-      border-radius: 160px; box-shadow: inset 0 0 40px rgba(0,0,0,0.7), 0 12px 30px rgba(0,0,0,0.85);
+      border: 8px solid #78350f; outline: 2.5px solid #fbbf24;
+      border-radius: 150px; box-shadow: inset 0 0 40px rgba(0,0,0,0.7), 0 12px 30px rgba(0,0,0,0.85);
       display: flex; flex-direction: column; justify-content: center; align-items: center;
     }
-    .table-watermark { font-size: 28px; font-weight: 900; color: rgba(15, 23, 42, 0.25); letter-spacing: 2px; pointer-events: none; }
+    .table-watermark { font-size: 24px; font-weight: 900; color: rgba(15, 23, 42, 0.25); letter-spacing: 2px; pointer-events: none; }
 
-    /* Center Pot & Chips Pile */
     .pot-pill {
-      position: absolute; top: 14px; background: rgba(0,0,0,0.45); border: 1px solid rgba(253,224,71,0.5);
-      padding: 2px 14px; border-radius: 20px; font-size: 13px; font-weight: 800; color: #fde047;
-      display: flex; align-items: center; gap: 5px;
+      position: absolute; top: 10px; background: rgba(0,0,0,0.45); border: 1px solid rgba(253,224,71,0.5);
+      padding: 2px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; color: #fde047;
     }
     .chips-cluster {
-      position: relative; width: 220px; height: 70px; display: flex; flex-wrap: wrap;
-      justify-content: center; align-items: center; gap: 4px; margin-bottom: 18px;
+      position: relative; width: 200px; height: 60px; display: flex; flex-wrap: wrap;
+      justify-content: center; align-items: center; gap: 3px; margin-bottom: 16px;
     }
     .casino-chip {
-      width: 26px; height: 26px; border-radius: 50%; border: 2.5px dashed #fff;
-      font-size: 8px; font-weight: 900; display: flex; justify-content: center; align-items: center;
-      box-shadow: 0 3px 5px rgba(0,0,0,0.7); animation: dropChip 0.25s ease-out;
+      width: 22px; height: 22px; border-radius: 50%; border: 2px dashed #fff;
+      font-size: 7px; font-weight: 900; display: flex; justify-content: center; align-items: center;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.7);
     }
-    @keyframes dropChip { from { transform: scale(1.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-    /* 4 Opponent Seats Around Oval */
     .op-seat { position: absolute; display: flex; align-items: center; gap: 6px; z-index: 18; }
-    .seat-tl { top: 65px; left: 24px; }
-    .seat-bl { bottom: 68px; left: 24px; }
-    .seat-tr { top: 65px; right: 24px; flex-direction: row-reverse; }
-    .seat-br { bottom: 68px; right: 24px; flex-direction: row-reverse; }
+    .seat-tl { top: 55px; left: 18px; }
+    .seat-bl { bottom: 58px; left: 18px; }
+    .seat-tr { top: 55px; right: 18px; flex-direction: row-reverse; }
+    .seat-br { bottom: 58px; right: 18px; flex-direction: row-reverse; }
 
     .op-pic-box { text-align: center; }
     .op-pic {
-      width: 48px; height: 48px; border-radius: 50%; background: #1e293b; border: 2px solid #cbd5e1;
-      display: flex; justify-content: center; align-items: center; font-size: 26px; position: relative;
+      width: 44px; height: 44px; border-radius: 50%; background: #1e293b; border: 2px solid #cbd5e1;
+      display: flex; justify-content: center; align-items: center; font-size: 22px;
     }
-    .op-pic.active-turn { border-color: #22c55e; box-shadow: 0 0 15px #22c55e; }
-    .op-name-lbl { font-size: 9px; color: #e2e8f0; background: rgba(0,0,0,0.6); padding: 1px 5px; border-radius: 6px; margin-top: 2px; }
+    .op-name-lbl { font-size: 8px; color: #e2e8f0; background: rgba(0,0,0,0.6); padding: 1px 5px; border-radius: 6px; margin-top: 2px; }
 
     .op-cards-mini { position: relative; text-align: center; }
     .mini-fan { display: flex; }
     .mini-c {
-      width: 24px; height: 34px; background: linear-gradient(135deg, #dc2626, #991b1b);
-      border: 1px solid #fecaca; border-radius: 4px; margin-left: -12px;
+      width: 22px; height: 30px; background: linear-gradient(135deg, #dc2626, #991b1b);
+      border: 1px solid #fecaca; border-radius: 4px; margin-left: -10px;
     }
     .mini-c:first-child { margin-left: 0; }
     .status-ribbon {
-      position: absolute; top: 10px; left: -4px; right: -4px; background: rgba(0,0,0,0.85);
-      font-size: 9px; font-weight: 800; padding: 1px 0; border-radius: 4px; color: #fde047;
+      position: absolute; top: 8px; left: -4px; right: -4px; background: rgba(0,0,0,0.85);
+      font-size: 8px; font-weight: 800; padding: 1px 0; border-radius: 4px; color: #fde047;
     }
     .status-ribbon.packed { color: #38bdf8; }
-    .op-bet-amt { font-size: 10px; color: #fde047; font-weight: 700; margin-top: 2px; }
+    .op-bet-amt { font-size: 9px; color: #fde047; font-weight: 700; margin-top: 2px; }
 
-    /* Bottom Player Hand & Timer Ring */
     .my-seat-zone {
-      position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%); z-index: 25;
+      position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%); z-index: 25;
       display: flex; align-items: center; gap: 10px;
     }
     .my-avatar-timer {
-      width: 56px; height: 56px; border-radius: 50%; background: conic-gradient(#22c55e 0deg, #22c55e 270deg, rgba(255,255,255,0.2) 270deg);
+      width: 50px; height: 50px; border-radius: 50%; background: conic-gradient(#22c55e 0deg, #22c55e 270deg, rgba(255,255,255,0.2) 270deg);
       padding: 4px; display: flex; justify-content: center; align-items: center; position: relative;
       box-shadow: 0 0 15px rgba(34, 197, 94, 0.7);
     }
     .my-avatar-inner {
       width: 100%; height: 100%; border-radius: 50%; background: #0f172a;
-      display: flex; justify-content: center; align-items: center; font-size: 28px;
+      display: flex; justify-content: center; align-items: center; font-size: 24px;
     }
     .dealer-d-badge {
-      position: absolute; left: -6px; bottom: 2px; background: #f59e0b; color: #000;
-      font-weight: 900; font-size: 10px; width: 18px; height: 18px; border-radius: 50%;
+      position: absolute; left: -5px; bottom: 2px; background: #f59e0b; color: #000;
+      font-weight: 900; font-size: 9px; width: 16px; height: 16px; border-radius: 50%;
       display: flex; justify-content: center; align-items: center; border: 1px solid #fff;
     }
 
     .my-cards-fan { display: flex; position: relative; cursor: pointer; }
     .royal-card {
-      width: 48px; height: 68px; background: #fff; color: #0f172a; border-radius: 7px;
-      border: 1px solid #94a3b8; margin-left: -14px; padding: 3px 5px;
-      font-weight: 900; font-size: 14px; box-shadow: -2px 4px 10px rgba(0,0,0,0.6);
-      display: flex; flex-direction: column; justify-content: space-between;
+      width: 44px; height: 62px; background: #fff; color: #0f172a; border-radius: 7px;
+      border: 1px solid #94a3b8; margin-left: -12px; padding: 3px 5px;
+      font-weight: 900; font-size: 13px; box-shadow: -2px 4px 10px rgba(0,0,0,0.6);
     }
     .royal-card:first-child { margin-left: 0; transform: rotate(-8deg); }
     .royal-card:nth-child(2) { transform: rotate(0deg) translateY(-3px); }
@@ -251,15 +240,14 @@
     .btn-see-gold {
       position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
       background: linear-gradient(180deg, #fde047, #d97706); border: 1.5px solid #fff;
-      color: #1e1b06; font-weight: 900; font-size: 12px; padding: 4px 18px; border-radius: 8px;
+      color: #1e1b06; font-weight: 900; font-size: 11px; padding: 3px 14px; border-radius: 8px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.8); cursor: pointer; z-index: 30;
     }
     .hand-rank-banner {
-      position: absolute; bottom: 6px; left: -6px; right: -6px; background: rgba(0,0,0,0.82);
-      color: #fde047; font-size: 12px; font-weight: 800; text-align: center; border-radius: 4px;
+      position: absolute; bottom: 4px; left: -4px; right: -4px; background: rgba(0,0,0,0.85);
+      color: #fde047; font-size: 11px; font-weight: 800; text-align: center; border-radius: 4px;
     }
 
-    /* Lightning Show Animation */
     #lightningBeam {
       display: none; position: absolute; top: 62%; left: 38%; width: 42%; height: 6px;
       background: linear-gradient(90deg, #38bdf8, #ffffff, #a855f7);
@@ -267,69 +255,61 @@
       transform: rotate(-8deg); border-radius: 10px;
     }
 
-    /* Bottom Action Controls Bar */
     .table-bottom-controls {
-      position: absolute; bottom: 6px; left: 16px; right: 16px; z-index: 30;
-      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      position: absolute; bottom: 6px; left: 14px; right: 14px; z-index: 30;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
-    .ctrl-group { display: flex; gap: 8px; }
+    .ctrl-group { display: flex; gap: 6px; }
     .btn-game {
-      padding: 7px 18px; border-radius: 10px; font-weight: 800; font-size: 13px;
+      padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 12px;
       border: 1.5px solid rgba(255,255,255,0.4); color: #fff; cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.6); min-width: 95px; text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6); min-width: 82px; text-align: center;
     }
     .btn-pack-red { background: linear-gradient(180deg, #ef4444, #991b1b); }
     .btn-side-gray { background: linear-gradient(180deg, #64748b, #334155); }
-    .btn-chaal-green { background: linear-gradient(180deg, #22c55e, #15803d); line-height: 1.1; font-size: 12px; }
+    .btn-chaal-green { background: linear-gradient(180deg, #22c55e, #15803d); line-height: 1.1; font-size: 11px; }
 
     .table-wallet-pill {
       background: linear-gradient(180deg, #1e1b4b, #0f172a); border: 2px solid #f59e0b;
-      border-radius: 12px; padding: 5px 22px; font-size: 16px; font-weight: 900; color: #fde047;
-      display: flex; align-items: center; gap: 6px;
+      border-radius: 12px; padding: 4px 18px; font-size: 14px; font-weight: 900; color: #fde047;
     }
 
-    /* ================= 4. 5-MINUTE TABLE FREEZE OVERLAY ================= */
+    /* 5-MINUTE TABLE FREEZE OVERLAY */
     .freeze-modal {
-      display: none; position: fixed; inset: 0; background: rgba(9, 4, 24, 0.94);
+      display: none; position: absolute; inset: 0; background: rgba(9, 4, 24, 0.94);
       backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center;
     }
     .freeze-card {
       background: linear-gradient(180deg, #3b0764, #1e1b4b); border: 2.5px solid #ef4444;
-      border-radius: 20px; padding: 18px 28px; text-align: center; max-width: 420px;
+      border-radius: 20px; padding: 16px 24px; text-align: center; max-width: 390px;
       box-shadow: 0 0 40px rgba(239, 68, 68, 0.5);
     }
-    .freeze-timer { font-size: 36px; font-weight: 900; color: #ef4444; margin: 6px 0; }
+    .freeze-timer { font-size: 32px; font-weight: 900; color: #ef4444; margin: 4px 0; }
   </style>
 </head>
 <body>
 
-<!-- Landscape Prompt for Vertical Phones -->
-<div id="rotateWarning">
-  <div style="font-size: 48px; margin-bottom: 12px;">📱🔄</div>
-  <h2 style="color: #fde047;">कृपया अपना फ़ोन घुमाएं (Landscape Mode)</h2>
-  <p style="font-size: 13px; color: #cbd5e1; margin-top: 6px;">रॉयल कैसीनो टेबल का पूरा अनुभव लेने के लिए ऑटो-रोटेट ऑन करें।</p>
-</div>
-
-<div class="viewport">
+<div class="viewport" id="mainViewport">
   <!-- ================= SCREEN 1: ROYAL LOBBY ================= -->
   <div id="lobbyScreen">
     <div class="lobby-top">
       <div class="profile-pill">
         <div class="p-avatar">🐯</div>
         <div>
-          <div style="font-size:11px; font-weight:700;">Rohit <span class="vip-badge">VIP 4</span></div>
+          <div style="font-size:10px; font-weight:700;">Rohit <span class="vip-badge">VIP 4</span></div>
           <div class="bal-display" id="lobbyBalText">₹583.00</div>
         </div>
       </div>
 
       <div class="top-icons">
+        <div class="top-icon-btn" onclick="goFullScreen()"><div>⛶</div>Full Screen</div>
         <div class="top-icon-btn" onclick="alert('विथड्रॉल रिक्वेस्ट पैनल!')"><div>💸</div>Withdraw</div>
         <div class="top-icon-btn" onclick="alert('टॉप विनर्स रैंकिंग!')"><div>🏆</div>Ranking</div>
       </div>
 
       <div class="live-withdraw-card">
-        <div class="p-avatar" style="width:30px; height:30px; font-size:16px;">👩</div>
-        <div style="font-size:10px; line-height:1.2;">
+        <div class="p-avatar" style="width:28px; height:28px; font-size:14px;">👩</div>
+        <div style="font-size:9px; line-height:1.2;">
           <div style="color:#f5d0fe;" id="liveUserTxt">guest594201...</div>
           <div style="color:#fde047; font-weight:800;" id="liveAmtTxt">Withdraw ₹2000</div>
         </div>
@@ -346,15 +326,13 @@
         <div class="side-item" onclick="alert('Lucky Spin')"><span>🎡</span>Lucky Spin</div>
       </div>
 
-      <!-- Main Teen Patti Hero Card -->
       <div class="hero-tp-card" onclick="openRoomList()">
         <span class="hot-tag">Hot</span>
-        <div style="font-size:10px; color:#fde047; align-self:flex-start;">👥 24,540</div>
+        <div style="font-size:9px; color:#fde047; align-self:flex-start;">👥 24,540</div>
         <div class="hero-art">🤵🃏</div>
         <div class="hero-title">Teen<br>Patti</div>
       </div>
 
-      <!-- 8 Game Grid -->
       <div class="games-matrix">
         <div class="mini-tile" style="background:linear-gradient(180deg,#2563eb,#1e3a8a);" onclick="openRoomList()">
           <span class="tile-players">👥 3174</span><div class="tile-icon">🤡</div><div class="tile-label">Joker TP</div>
@@ -400,7 +378,7 @@
   <div id="roomListScreen">
     <div class="room-header">
       <button class="btn-circle-back" onclick="switchScreen('lobbyScreen')">❮</button>
-      <div style="font-size:18px; font-weight:800; color:#fde047;">🃏 Room List (5-Player Tables)</div>
+      <div style="font-size:16px; font-weight:800; color:#fde047;">🃏 Room List (5-Player Tables)</div>
       <div class="bal-display" id="roomBalText">₹583.00</div>
     </div>
 
@@ -418,7 +396,7 @@
         <button class="btn-play-now" onclick="joinTable(5)">Play Now</button>
       </div>
       <div class="room-row">
-        <span>₹10 <span style="background:#a855f7; color:#fff; font-size:9px; padding:1px 6px; border-radius:10px;">Best</span></span>
+        <span>₹10 <span style="background:#a855f7; color:#fff; font-size:8px; padding:1px 6px; border-radius:10px;">Best</span></span>
         <span>₹100 - ₹5,000</span><span>👤 2,701</span>
         <button class="btn-play-now" onclick="joinTable(10)">Play Now</button>
       </div>
@@ -442,26 +420,21 @@
       </div>
     </div>
 
-    <!-- Female Dealer -->
     <div class="dealer-avatar">👸🏽</div>
 
-    <!-- Oval Blue Casino Table -->
     <div class="oval-table">
       <div class="pot-pill">🪙 <span id="potDisplay">25.00</span></div>
       <div class="table-watermark">TEEN PATTI</div>
       <div class="chips-cluster" id="chipsCluster"></div>
     </div>
 
-    <!-- Lightning Show Beam -->
     <div id="lightningBeam"></div>
 
-    <!-- 4 Opponent Seats -->
     <div class="op-seat seat-tl" id="op0"></div>
     <div class="op-seat seat-bl" id="op1"></div>
     <div class="op-seat seat-tr" id="op2"></div>
     <div class="op-seat seat-br" id="op3"></div>
 
-    <!-- Player Bottom Hand & Timer -->
     <div class="my-seat-zone">
       <div class="my-avatar-timer" id="myTimerRing">
         <div class="my-avatar-inner">🐯</div>
@@ -476,7 +449,6 @@
       </div>
     </div>
 
-    <!-- Bottom Controls -->
     <div class="table-bottom-controls">
       <div class="ctrl-group">
         <button class="btn-game btn-pack-red" onclick="playerPack()">Pack</button>
@@ -491,21 +463,21 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- ================= 5-MINUTE TABLE FREEZE MODAL ================= -->
-<div class="freeze-modal" id="freezeModal">
-  <div class="freeze-card">
-    <div style="font-size:16px; font-weight:900; color:#ef4444;">🚨 पूरी 5-प्लेयर टेबल होल्ड (फ़्रीज़) है!</div>
-    <p id="freezeMsg" style="font-size:11px; color:#e2e8f0; margin-top:4px;">
-      बैलेंस कम होने के कारण सभी 5 खिलाड़ियों की चाल लॉक कर दी गई है। कोई भी बाहर नहीं जा सकता।
-    </p>
-    <div class="freeze-timer" id="freezeClock">05:00</div>
-    <div style="background:rgba(0,0,0,0.5); border:1px solid #fbbf24; padding:8px; border-radius:10px; margin-bottom:10px;">
-      <div style="font-size:10px; color:#fde047;">UPI द्वारा तुरंत रीचार्ज करें:</div>
-      <div style="font-size:14px; font-weight:800;">rs970684@okaxis</div>
+  <!-- ================= 5-MINUTE TABLE FREEZE MODAL ================= -->
+  <div class="freeze-modal" id="freezeModal">
+    <div class="freeze-card">
+      <div style="font-size:15px; font-weight:900; color:#ef4444;">🚨 पूरी 5-प्लेयर टेबल होल्ड (फ़्रीज़) है!</div>
+      <p id="freezeMsg" style="font-size:10px; color:#e2e8f0; margin-top:4px;">
+        बैलेंस कम होने के कारण सभी 5 खिलाड़ियों की चाल लॉक कर दी गई है। कोई भी बाहर नहीं जा सकता।
+      </p>
+      <div class="freeze-timer" id="freezeClock">05:00</div>
+      <div style="background:rgba(0,0,0,0.5); border:1px solid #fbbf24; padding:6px; border-radius:10px; margin-bottom:8px;">
+        <div style="font-size:9px; color:#fde047;">UPI द्वारा तुरंत रीचार्ज करें:</div>
+        <div style="font-size:13px; font-weight:800;">rs970684@okaxis</div>
+      </div>
+      <button class="btn-play-now" style="width:100%; padding:8px; font-size:13px;" onclick="rechargeNow()">₹200 रीचार्ज सफल (गेम चालू करें)</button>
     </div>
-    <button class="btn-play-now" style="width:100%; padding:10px; font-size:14px;" onclick="rechargeNow()">₹200 रीचार्ज सफल (गेम चालू करें)</button>
   </div>
 </div>
 
@@ -515,7 +487,14 @@
   let bootAmt = 5, currentStake = 5, potAmt = 25, isSeen = false, roundCount = 1;
   let myCards = [], opponents = [], freezeTimer = null, soundOn = true;
 
-  /* Casino Sound Synthesizer */
+  function goFullScreen() {
+    const el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock("landscape").catch(() => {});
+    }
+  }
+
   const ctx = new (window.AudioContext || window.webkitAudioContext)();
   function beep(freq, dur, type = 'sine') {
     if (!soundOn) return;
@@ -538,7 +517,6 @@
   }
   syncBalance(walletBal);
 
-  /* Live Fake Ticker */
   const guests = ["guest81233", "phone86228", "Lakhvir_S", "guest38333", "Vikram_99"];
   setInterval(() => {
     const g = guests[Math.floor(Math.random() * guests.length)];
@@ -554,7 +532,7 @@
     document.getElementById(id).style.display = (id === "tableScreen") ? "block" : "flex";
   }
 
-  function openRoomList() { switchScreen("roomListScreen"); }
+  function openRoomList() { goFullScreen(); switchScreen("roomListScreen"); }
 
   function joinTable(boot) {
     if (walletBal < boot * 2) { triggerTableHold(`इस टेबल के लिए कम से कम ₹${boot * 2} चाहिए।`); return; }
@@ -563,7 +541,6 @@
     startNewRound();
   }
 
-  /* Teen Patti Deck & Evaluator */
   const suits = ["♠", "♥", "♦", "♣"];
   const ranks = [
     {l:"2",v:2},{l:"3",v:3},{l:"4",v:4},{l:"5",v:5},{l:"6",v:6},{l:"7",v:7},
@@ -693,7 +670,6 @@
     potAmt += cost;
     addChipToPot(cost);
 
-    // Opponents move
     let activeOps = 0;
     opponents.forEach(op => {
       if (op.packed) return;
@@ -729,7 +705,7 @@
       opponents.forEach(o => { if (!o.packed) maxOp = Math.max(maxOp, getHandRank(o.cards).score); });
 
       if (myScore >= maxOp) {
-        const netWin = potAmt * 0.999; // 0.1% commission
+        const netWin = potAmt * 0.999;
         syncBalance(walletBal + netWin);
         [523, 659, 784, 1046].forEach((f, i) => setTimeout(() => beep(f, 0.2), i * 100));
         fetch(`${BACKEND_URL}/api/game/settle`, {
@@ -741,7 +717,6 @@
     }, 1200);
   }
 
-  /* 5-Minute Table Freeze Logic */
   function triggerTableHold(reason) {
     document.getElementById("freezeMsg").innerText = reason + " सभी 5 खिलाड़ियों की टेबल 5 मिनट के लिए लॉक है।";
     document.getElementById("freezeModal").style.display = "flex";
