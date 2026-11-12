@@ -1,683 +1,231 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>UONO PLAY VIP - 500 Lucky Gems & Royal Teen Patti</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --gold-grad: linear-gradient(180deg, #fef08a 0%, #f59e0b 55%, #b45309 100%);
-      --green-btn: linear-gradient(180deg, #4ade80 0%, #16a34a 60%, #14532d 100%);
-      --emerald-bg: radial-gradient(circle at top, #0d4a3e 0%, #041d18 65%, #020f0c 100%);
-    }
+<!-- ===== 500 LUCKY GEMS (play-money slot module) — paste before </body> ===== -->
+<style>
+#lgOverlay{position:fixed;inset:0;z-index:9999;display:none;justify-content:center;background:#05150b;font-family:system-ui,Arial,sans-serif}
+#lgOverlay.open{display:flex}
+.lg-app{position:relative;width:100%;max-width:440px;height:100%;display:flex;flex-direction:column;overflow:hidden;color:#fff;
+ background:radial-gradient(ellipse at 50% 0,#2f7a3d 0,#14471f 45%,#06210e 100%)}
+.lg-app:before{content:"";position:absolute;inset:0;opacity:.18;pointer-events:none;
+ background:repeating-linear-gradient(90deg,transparent 0 38px,#000 38px 40px),repeating-linear-gradient(0deg,transparent 0 38px,#000 38px 40px)}
+.lg-top{position:relative;display:flex;align-items:center;gap:8px;padding:10px;background:linear-gradient(#3a2a05,#1d1403);border-bottom:2px solid #d4a017}
+.lg-exit{background:#7a1010;color:#fff;border:1px solid #f0c040;border-radius:8px;padding:6px 10px;font-weight:700;cursor:pointer}
+.lg-bal{flex:1;display:flex;align-items:center;gap:6px;background:#000a;border:1px solid #d4a017;border-radius:20px;padding:5px 10px;font-weight:800;color:#ffd75e}
+.lg-coin{width:20px;height:20px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff2a8,#d4a017 60%,#8a6508);display:inline-block}
+.lg-plus{width:28px;height:28px;border-radius:50%;border:0;background:#1fb84a;color:#fff;font-size:20px;font-weight:900;cursor:pointer;line-height:1}
+.lg-snd{background:none;border:1px solid #d4a017;color:#ffd75e;border-radius:8px;padding:5px 8px;cursor:pointer}
+.lg-title{position:relative;text-align:center;font-weight:900;font-size:22px;letter-spacing:1px;margin:10px 0 2px;color:#ffd75e;text-shadow:0 0 12px #f5b800,0 2px 0 #5a3d00}
+.lg-sub{position:relative;text-align:center;font-size:11px;opacity:.8;margin-bottom:8px}
+.lg-mid{position:relative;flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 8px;min-height:0}
+.lg-frame{padding:10px;border-radius:16px;background:linear-gradient(145deg,#f7d66a,#a8780c 50%,#f7d66a);box-shadow:0 0 25px #f5b80088,inset 0 0 8px #000}
+.lg-reels{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#0b1a10;padding:6px;border-radius:10px}
+.lg-reel{display:grid;grid-template-rows:repeat(3,1fr);gap:6px}
+.lg-cell{width:76px;height:76px;display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:44px;
+ background:radial-gradient(circle,#27402e,#0f2015);border:1px solid #3f6b4a;transition:transform .15s}
+.lg-cell svg{width:52px;height:52px;filter:drop-shadow(0 0 5px currentColor)}
+.lg-cell.spin{filter:blur(2px);transform:translateY(3px)}
+.lg-cell.land{animation:lgLand .25s}
+@keyframes lgLand{0%{transform:translateY(-14px)}60%{transform:translateY(5px)}100%{transform:none}}
+.lg-cell.win{border-color:#ffe066;background:radial-gradient(circle,#7a5a10,#2a1d03);animation:lgGlow .5s infinite alternate;z-index:2}
+@keyframes lgGlow{from{box-shadow:0 0 6px #ffd75e}to{box-shadow:0 0 22px 4px #fff2a8}}
+.lg-pillar{display:flex;flex-direction:column;gap:10px}
+.lg-badge{width:62px;padding:8px 2px;text-align:center;font-weight:900;font-size:11px;border-radius:10px;border:2px solid #7a5a10;
+ background:#1d1403;color:#8a7a50;transition:.25s}
+.lg-badge b{display:block;font-size:17px}
+.lg-badge.hit{color:#fff;border-color:#ffe066;background:linear-gradient(#e0a800,#8a5a00);box-shadow:0 0 22px #ffd75e;transform:scale(1.15)}
+.lg-msg{position:relative;text-align:center;height:22px;font-weight:700;color:#ffd75e;font-size:14px;margin:4px 0}
+.lg-deck{position:relative;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 12px 18px;background:linear-gradient(#2a1d03,#120c01);border-top:2px solid #d4a017}
+.lg-box{flex:1;text-align:center}
+.lg-box small{display:block;font-size:10px;letter-spacing:1px;color:#e8c866}
+.lg-val{background:#000;border:1px solid #d4a017;border-radius:8px;padding:6px;font-weight:900;font-size:18px;color:#7dff9a;font-family:monospace;margin-top:3px}
+.lg-bet{display:flex;align-items:center;gap:4px;margin-top:3px}
+.lg-bet button{width:30px;height:34px;border-radius:8px;border:1px solid #d4a017;background:#3a2a05;color:#ffd75e;font-size:18px;font-weight:900;cursor:pointer}
+.lg-bet .lg-val{flex:1;margin:0;color:#ffd75e}
+.lg-spin{width:92px;height:92px;border-radius:50%;border:4px solid #f7d66a;font-weight:900;font-size:18px;color:#fff;cursor:pointer;letter-spacing:1px;
+ background:radial-gradient(circle at 35% 25%,#7dff9a,#17a840 55%,#0b5a20);box-shadow:0 0 22px #2cff6a99,0 6px 0 #064015,inset 0 4px 8px #fff6;text-shadow:0 2px 3px #000}
+.lg-spin:active{transform:translateY(5px);box-shadow:0 0 22px #2cff6a99,0 1px 0 #064015}
+.lg-spin:disabled,.lg-bet button:disabled{filter:grayscale(.8);opacity:.6;cursor:not-allowed}
+.lg-fx{position:absolute;pointer-events:none;font-size:20px;animation:lgFx 1s ease-out forwards;z-index:5}
+@keyframes lgFx{to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
+.lg-flash{position:absolute;inset:0;background:#fff3;opacity:0;pointer-events:none;animation:lgFlash .5s}
+@keyframes lgFlash{0%{opacity:.8}100%{opacity:0}}
+.lg-pay{position:relative;font-size:10px;text-align:center;opacity:.75;padding-bottom:4px}
+</style>
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
-    body { background: #010a08; color: #fff; display: flex; justify-content: center; min-height: 100vh; overflow-x: hidden; }
-
-    /* ================= MAIN PORTRAIT CONTAINER ================= */
-    .app-frame {
-      width: 100%; max-width: 440px; min-height: 100vh; background: var(--emerald-bg);
-      position: relative; padding-bottom: 68px; box-shadow: 0 0 40px rgba(0,0,0,0.95);
-    }
-
-    /* Top Header */
-    .top-bar {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 8px 10px; background: linear-gradient(180deg, #09352c, #041d18);
-      border-bottom: 1.5px solid rgba(234, 179, 8, 0.5); position: sticky; top: 0; z-index: 50;
-    }
-    .user-box { display: flex; align-items: center; gap: 6px; }
-    .avatar-ring { width: 38px; height: 38px; border-radius: 50%; background: var(--gold-grad); padding: 2px; }
-    .avatar-inner { width: 100%; height: 100%; border-radius: 50%; background: #1e293b; display: flex; justify-content: center; align-items: center; font-size: 20px; }
-    .vip-tag { background: linear-gradient(180deg, #34d399, #065f46); border: 1px solid #fde047; font-size: 9px; font-weight: 900; padding: 1px 6px; border-radius: 6px; color: #fef08a; }
-
-    .wallet-pill { background: #031512; border: 1.5px solid #eab308; border-radius: 20px; padding: 3px 6px 3px 4px; display: flex; align-items: center; gap: 8px; }
-    .coin-badge { width: 24px; height: 24px; border-radius: 50%; background: var(--gold-grad); color: #422006; font-weight: 900; font-size: 13px; display: flex; justify-content: center; align-items: center; }
-    .bal-text { font-size: 14px; font-weight: 800; color: #fff; min-width: 58px; text-align: center; }
-    .plus-btn { width: 24px; height: 24px; border-radius: 50%; background: var(--green-btn); border: 1px solid #bbf7d0; color: #fff; font-weight: 900; font-size: 16px; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-
-    /* Live Winner Ticker */
-    .winner-ticker {
-      margin: 6px 10px 0 10px; background: linear-gradient(90deg, #0c4a6e, #0369a1, #0c4a6e);
-      border: 1.5px solid #38bdf8; border-radius: 14px; padding: 5px 10px;
-      display: flex; align-items: center; justify-content: space-between; font-size: 11px;
-    }
-
-    /* Jackpot Lotto Banner */
-    .jackpot-banner {
-      margin: 8px 10px; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
-      border: 2px solid #eab308; border-radius: 14px; padding: 10px 12px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-    .jp-val { font-size: 25px; font-weight: 900; background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-
-    /* Featured Hero Game Cards (500 Lucky Gems & Royal Teen Patti) */
-    .hero-games { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 4px 10px 12px 10px; }
-    .hero-card {
-      border-radius: 16px; border: 2px solid #fde047; padding: 12px 8px; text-align: center;
-      position: relative; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.75);
-      transition: transform 0.15s;
-    }
-    .hero-card:active { transform: scale(0.96); }
-    .badge-hot { position: absolute; top: 0; left: 0; background: linear-gradient(90deg, #ef4444, #f97316); font-size: 9px; font-weight: 900; padding: 2px 8px; border-radius: 0 0 10px 0; }
-    .btn-play-now {
-      margin-top: 8px; background: var(--gold-grad); color: #422006; border: 1.5px solid #fff;
-      font-weight: 900; font-size: 12px; padding: 6px 14px; border-radius: 20px; width: 100%;
-    }
-
-    /* Bottom 5-Tab Navigation */
-    .bottom-nav {
-      position: fixed; bottom: 0; width: 100%; max-width: 440px; height: 62px;
-      background: linear-gradient(180deg, #09382f 0%, #031814 100%);
-      border-top: 2px solid #eab308; display: flex; justify-content: space-around; align-items: center; z-index: 60;
-    }
-    .nav-tab { text-align: center; font-size: 10px; font-weight: 800; color: #a7f3d0; cursor: pointer; }
-    .nav-tab.active { color: #fde047; transform: translateY(-2px); }
-    .nav-tab span { font-size: 21px; display: block; }
-
-    /* ================= GAME 1: 500 LUCKY GEMS (TEMPLE JUNGLE SLOT) ================= */
-    #luckyGemsScreen {
-      display: none; position: fixed; inset: 0; max-width: 440px; margin: 0 auto; z-index: 500;
-      background: linear-gradient(180deg, #1b4332 0%, #2d6a4f 28%, #1e1b18 65%, #0f0d0b 100%);
-      flex-direction: column; justify-content: space-between; overflow-y: auto;
-    }
-    .slot-header {
-      display: flex; justify-content: space-between; align-items: center; padding: 8px 10px;
-      background: rgba(0,0,0,0.65); border-bottom: 1.5px solid #eab308;
-    }
-    .temple-banner {
-      text-align: center; padding: 8px 6px;
-      background: radial-gradient(circle, rgba(234,179,8,0.28) 0%, transparent 70%);
-    }
-    .temple-title {
-      font-size: 24px; font-weight: 900; letter-spacing: 1px;
-      background: linear-gradient(180deg, #fef08a, #f59e0b, #b45309);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 3px 2px #000);
-    }
-
-    /* Slot Machine Frame + Multiplier Side Pillar */
-    .slot-stage { display: flex; gap: 6px; padding: 0 10px; align-items: stretch; }
-    .reel-frame {
-      flex: 1; background: linear-gradient(180deg, #451a03, #1c0a00);
-      border: 4px solid #eab308; border-radius: 14px; padding: 8px;
-      box-shadow: inset 0 0 25px #000, 0 6px 20px rgba(0,0,0,0.9);
-      position: relative;
-    }
-    .reel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .gem-cell {
-      aspect-ratio: 1 / 1; background: radial-gradient(circle, #3f2305 0%, #1a0d00 100%);
-      border: 1.5px solid #b45309; border-radius: 10px;
-      display: flex; justify-content: center; align-items: center; font-size: 36px;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.8); transition: transform 0.15s;
-    }
-    .gem-cell.win-glow {
-      border: 2.5px solid #4ade80; box-shadow: 0 0 18px #4ade80, inset 0 0 12px #fde047;
-      transform: scale(1.06);
-    }
-    .spinning .gem-cell { animation: reelBlur 0.12s infinite alternate; }
-    @keyframes reelBlur { from { transform: translateY(-4px) scale(0.95); } to { transform: translateY(4px) scale(1.02); } }
-
-    /* Right Side Bonus Multiplier Pillar (5x Nudge, 500x, 100x) */
-    .mult-pillar {
-      width: 72px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px;
-    }
-    .mult-box {
-      flex: 1; background: linear-gradient(180deg, #78350f, #451a03); border: 2px solid #eab308;
-      border-radius: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;
-      font-weight: 900; text-align: center; padding: 2px;
-    }
-    .mult-box.active-mult {
-      background: linear-gradient(180deg, #f59e0b, #b45309); border-color: #fff;
-      box-shadow: 0 0 15px #fde047; transform: scale(1.04);
-    }
-
-    /* Slot Bottom Controls */
-    .slot-controls {
-      background: linear-gradient(180deg, #1c1917, #0c0a09); border-top: 2px solid #eab308;
-      padding: 10px 12px 14px 12px; display: flex; justify-content: space-between; align-items: center;
-    }
-    .bet-adjuster {
-      display: flex; align-items: center; gap: 8px; background: #292524;
-      border: 1.5px solid #eab308; border-radius: 22px; padding: 4px 8px;
-    }
-    .bet-step {
-      width: 28px; height: 28px; border-radius: 50%; background: var(--gold-grad);
-      color: #422006; font-weight: 900; font-size: 18px; border: none; cursor: pointer;
-    }
-    .spin-orb {
-      width: 68px; height: 68px; border-radius: 50%; background: var(--green-btn);
-      border: 3px solid #fde047; color: #fff; font-weight: 900; font-size: 15px;
-      box-shadow: 0 0 20px rgba(74, 222, 128, 0.7); cursor: pointer;
-    }
-    .spin-orb:active { transform: scale(0.92); }
-
-    /* ================= GAME 2: FULL-SCREEN CASINO TEEN PATTI TABLE ================= */
-    #tpCasinoScreen {
-      display: none; position: fixed; inset: 0; z-index: 600;
-      background: radial-gradient(circle at 50% 20%, #4c1d95 0%, #1e1b4b 55%, #0f0722 100%);
-      overflow: hidden;
-    }
-    @media screen and (orientation: portrait) {
-      #tpCasinoScreen {
-        width: 100vh; height: 100vw;
-        transform: rotate(90deg); transform-origin: center center;
-        top: 50%; left: 50%; margin-top: -50vw; margin-left: -50vh;
-      }
-    }
-    .oval-table {
-      position: absolute; top: 44px; left: 12%; right: 12%; bottom: 46px;
-      background: radial-gradient(ellipse at center, #3b82f6 0%, #1d4ed8 55%, #1e3a8a 100%);
-      border: 8px solid #78350f; outline: 2.5px solid #fbbf24; border-radius: 150px;
-      box-shadow: inset 0 0 45px rgba(0,0,0,0.75);
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-    }
-    .dealer-avatar {
-      position: absolute; top: 2px; left: 50%; transform: translateX(-50%); z-index: 20;
-      width: 56px; height: 56px; border-radius: 50%; background: var(--gold-grad);
-      border: 2px solid #fff; display: flex; justify-content: center; align-items: center; font-size: 32px;
-    }
-    .chips-area { width: 200px; height: 56px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 3px; }
-    .chip { width: 22px; height: 22px; border-radius: 50%; border: 2px dashed #fff; font-size: 8px; font-weight: 900; display: flex; justify-content: center; align-items: center; }
-
-    .seat-box { position: absolute; display: flex; align-items: center; gap: 6px; z-index: 25; }
-    .s-tl { top: 52px; left: 16px; } .s-bl { bottom: 54px; left: 16px; }
-    .s-tr { top: 52px; right: 16px; flex-direction: row-reverse; } .s-br { bottom: 54px; right: 16px; flex-direction: row-reverse; }
-    .op-pic { width: 42px; height: 42px; border-radius: 50%; background: #1e293b; border: 2px solid #fde047; display: flex; justify-content: center; align-items: center; font-size: 20px; }
-    .mini-cards { display: flex; }
-    .m-card { width: 20px; height: 28px; background: linear-gradient(135deg, #dc2626, #991b1b); border: 1px solid #fecaca; border-radius: 4px; margin-left: -9px; }
-    .m-card:first-child { margin-left: 0; }
-
-    .hero-seat { position: absolute; bottom: 42px; left: 50%; transform: translateX(-50%); z-index: 30; display: flex; align-items: center; gap: 10px; }
-    .green-timer {
-      width: 50px; height: 50px; border-radius: 50%;
-      background: conic-gradient(#22c55e 0deg, #22c55e 280deg, rgba(255,255,255,0.2) 280deg);
-      padding: 4px; display: flex; justify-content: center; align-items: center;
-    }
-    .hero-cards { display: flex; position: relative; cursor: pointer; }
-    .p-card {
-      width: 44px; height: 60px; background: #fff; color: #0f172a; border-radius: 6px;
-      border: 1px solid #94a3b8; margin-left: -10px; padding: 3px 5px; font-weight: 900; font-size: 13px;
-    }
-    .p-card:first-child { margin-left: 0; transform: rotate(-8deg); }
-    .p-card:nth-child(3) { transform: rotate(8deg); }
-    .p-card.back { background: linear-gradient(135deg, #dc2626, #7f1d1d); border: 1.5px solid #fef08a; }
-    .btn-see { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--gold-grad); border: 1.5px solid #fff; color: #000; font-weight: 900; font-size: 11px; padding: 2px 14px; border-radius: 8px; }
-
-    .tp-bottom-bar { position: absolute; bottom: 6px; left: 14px; right: 14px; z-index: 35; display: flex; justify-content: space-between; align-items: center; }
-    .tp-btn { padding: 6px 14px; border-radius: 10px; font-weight: 800; font-size: 11px; border: 1.5px solid rgba(255,255,255,0.45); color: #fff; cursor: pointer; }
-
-    /* ================= 5-MINUTE TABLE FREEZE OVERLAY ================= */
-    .freeze-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 9999;
-      justify-content: center; align-items: center; padding: 16px;
-    }
-    .freeze-box {
-      width: 100%; max-width: 360px; background: linear-gradient(180deg, #0b463a, #04211b);
-      border: 2.5px solid #ef4444; border-radius: 20px; padding: 18px; text-align: center;
-    }
-  </style>
-</head>
-<body>
-
-<div class="app-frame">
-  <!-- Header -->
-  <div class="top-bar">
-    <div class="user-box">
-      <div class="avatar-ring"><div class="avatar-inner">🐯</div></div>
-      <div>
-        <div class="vip-tag">VIP 2</div>
-        <div style="font-size:10px; color:#a7f3d0; font-weight:700;">Rohit</div>
-      </div>
-    </div>
-
-    <div class="wallet-pill">
-      <div class="coin-badge">₹</div>
-      <div class="bal-text" id="lobbyWallet">100.00</div>
-      <div class="plus-btn" onclick="triggerTableFreeze('वॉलेट रीचार्ज')">+</div>
-    </div>
-
-    <div style="font-size:18px; cursor:pointer;" onclick="toggleAudio()" id="audioIcon">🔊</div>
+<div id="lgOverlay" aria-hidden="true">
+ <div class="lg-app" id="lgApp">
+  <div class="lg-top">
+   <button class="lg-exit" onclick="closeLuckyGems()">&larr; Exit</button>
+   <div class="lg-bal"><span class="lg-coin"></span><span id="lgBal">0</span></div>
+   <button class="lg-plus" id="lgPlus" title="Get free play coins" onclick="LG.refill()">+</button>
+   <button class="lg-snd" id="lgSnd" onclick="LG.toggleSound()">🔊</button>
   </div>
-
-  <!-- Live Winner Ticker -->
-  <div class="winner-ticker">
-    <span>🔥 <strong id="tickUser">Deepak (UID:3883281)</strong></span>
-    <span style="color:#fde047; font-weight:800;" id="tickWin">Win: X567 ₹49,666</span>
+  <div class="lg-title">500 LUCKY GEMS</div>
+  <div class="lg-sub">Play-money game &bull; virtual coins only</div>
+  <div class="lg-mid">
+   <div class="lg-frame"><div class="lg-reels" id="lgReels"></div></div>
+   <div class="lg-pillar">
+    <div class="lg-badge" id="lgB5"><b>5x</b>NUDGE</div>
+    <div class="lg-badge" id="lgB100"><b>100x</b>SUPER</div>
+    <div class="lg-badge" id="lgB500"><b>500x</b>MEGA</div>
+   </div>
   </div>
-
-  <!-- Live Jackpot Banner -->
-  <div class="jackpot-banner">
-    <div>
-      <div style="font-size:11px; font-weight:900; color:#4ade80;">JACKPOT LOTTO <span style="background:#ef4444; color:#fff; font-size:8px; padding:1px 5px; border-radius:4px;">LIVE</span></div>
-      <div class="jp-val" id="liveJpAmt">₹1,103,796</div>
-      <div style="font-size:9px; color:#a7f3d0;">🕒 Draw In: 10:25:19 | 0.1% Commission Active</div>
-    </div>
-    <div style="font-size:36px;">🎰</div>
+  <div class="lg-msg" id="lgMsg">Press SPIN</div>
+  <div class="lg-pay">3 in a line: 💎5x · ♦8x · ◆12x · 👑25x · 🦁50x (line stake = bet ÷ 5, 🦁 is wild)</div>
+  <div class="lg-deck">
+   <div class="lg-box"><small>TOTAL BET</small>
+    <div class="lg-bet"><button id="lgMinus" onclick="LG.bet(-1)">−</button><div class="lg-val" id="lgBet">10</div><button id="lgUp" onclick="LG.bet(1)">+</button></div>
+   </div>
+   <button class="lg-spin" id="lgSpinBtn" onclick="spinLuckyGems()">SPIN</button>
+   <div class="lg-box"><small>LAST WIN</small><div class="lg-val" id="lgWin">0.00</div></div>
   </div>
-
-  <!-- Main Playable Games Section -->
-  <div style="text-align:center; font-size:11px; font-weight:900; color:#fde047; margin:6px 0;">▼ &nbsp; SELECT & PLAY LIVE GAMES &nbsp; ▼</div>
-
-  <div class="hero-games">
-    <!-- Card 1: 500 Lucky Gems -->
-    <div class="hero-card" style="background:linear-gradient(180deg, #15803d 0%, #052e16 100%);" onclick="openLuckyGems()">
-      <span class="badge-hot">HOT 500X</span>
-      <div style="font-size:48px; margin:8px 0;">🦁💎</div>
-      <div style="font-size:14px; font-weight:900; color:#fde047;">500 LUCKY GEMS</div>
-      <div style="font-size:10px; color:#bbf7d0;">3x3 Temple Slot + 500x Multiplier</div>
-      <button class="btn-play-now">▶ PLAY NOW</button>
-    </div>
-
-    <!-- Card 2: Royal Teen Patti -->
-    <div class="hero-card" style="background:linear-gradient(180deg, #b45309 0%, #451a03 100%);" onclick="openTeenPatti()">
-      <span class="badge-hot">5-PLAYER LIVE</span>
-      <div style="font-size:48px; margin:8px 0;">🤵🃏</div>
-      <div style="font-size:14px; font-weight:900; color:#fde047;">UONO TEEN PATTI</div>
-      <div style="font-size:10px; color:#fef08a;">Royal Casino Table + Show</div>
-      <button class="btn-play-now">▶ PLAY NOW</button>
-    </div>
-  </div>
-
-  <!-- Rules & Fairplay Info Card -->
-  <div style="margin:6px 10px; background:rgba(4, 33, 28, 0.9); border:1px solid #115e59; border-radius:12px; padding:10px; font-size:11px; color:#a7f3d0;">
-    <strong style="color:#fde047;">📜 Platform Rules & Protection:</strong><br>
-    • दोनों गेम्स एक ही कॉमन वॉलेट से जुड़े हैं।<br>
-    • हर जीत पर केवल <strong>0.1% कमीशन</strong> लागू।<br>
-    • बैलेंस कम होने पर <strong>5-मिनट टेबल फ़्रीज़</strong> सुरक्षा सक्रिय।
-  </div>
-
-  <!-- Bottom 5-Tab Navigation -->
-  <div class="bottom-nav">
-    <div class="nav-tab" onclick="triggerTableFreeze('बैंक / डिपॉज़िट')"><span>🏦</span>Bank</div>
-    <div class="nav-tab active"><span>🎰</span>Game</div>
-    <div class="nav-tab" onclick="claimWheelBonus()"><span>🎡</span>Lucky Wheel</div>
-    <div class="nav-tab" onclick="alert('रेफरल लिंक: https://rohitsingh9706.github.io/game-server/?ref=40747709')"><span>🤝</span>Refer & Earn</div>
-    <div class="nav-tab" onclick="alert('डेली चेक-इन रिवार्ड ₹5 वॉलेट में जोड़ा गया!'); updateWallet(balance + 5);"><span>🎁</span>Events</div>
-  </div>
-</div>
-
-<!-- ================= GAME 1: 500 LUCKY GEMS (TEMPLE JUNGLE SLOT) ================= -->
-<div id="luckyGemsScreen">
-  <div class="slot-header">
-    <button style="background:#0d4a3e; border:1px solid #eab308; color:#fde047; padding:4px 12px; border-radius:10px; font-weight:800; cursor:pointer;" onclick="closeLuckyGems()">⬅ Exit</button>
-    <div class="wallet-pill">
-      <div class="coin-badge">₹</div>
-      <div class="bal-text" id="slotWallet">100.00</div>
-      <div class="plus-btn" onclick="triggerTableFreeze('स्लॉट रीचार्ज')">+</div>
-    </div>
-    <div style="font-size:11px; color:#4ade80; font-weight:800;">0.1% Fee</div>
-  </div>
-
-  <div class="temple-banner">
-    <div style="font-size:28px;">🏛️🦁🏛️</div>
-    <div class="temple-title">500 LUCKY GEMS</div>
-    <div id="slotWinMsg" style="font-size:13px; font-weight:900; color:#4ade80; min-height:20px;">रील्स घुमाएं और 500x तक जीतें!</div>
-  </div>
-
-  <div class="slot-stage">
-    <div class="reel-frame" id="reelFrame">
-      <div class="reel-grid" id="reelGrid"></div>
-    </div>
-
-    <div class="mult-pillar">
-      <div class="mult-box" id="mBox1"><span style="font-size:10px; color:#fde047;">5x</span><span style="font-size:11px;">NUDGE</span></div>
-      <div class="mult-box" id="mBox2"><span style="font-size:15px; color:#fde047;">500x</span><span style="font-size:9px;">MEGA</span></div>
-      <div class="mult-box" id="mBox3"><span style="font-size:15px; color:#4ade80;">100x</span><span style="font-size:9px;">SUPER</span></div>
-    </div>
-  </div>
-
-  <div class="slot-controls">
-    <div>
-      <div style="font-size:10px; color:#fde047; font-weight:800; margin-bottom:2px;">TOTAL BET</div>
-      <div class="bet-adjuster">
-        <button class="bet-step" onclick="changeSlotBet(-5)">-</button>
-        <span style="font-size:15px; font-weight:900; min-width:36px; text-align:center;" id="slotBetAmt">10</span>
-        <button class="bet-step" onclick="changeSlotBet(5)">+</button>
-      </div>
-    </div>
-
-    <div style="text-align:center;">
-      <div style="font-size:10px; color:#a7f3d0;">LAST WIN</div>
-      <div style="font-size:18px; font-weight:900; color:#fde047;" id="lastSlotWin">₹0.00</div>
-    </div>
-
-    <button class="spin-orb" id="btnSpinSlot" onclick="spinLuckyGems()">SPIN</button>
-  </div>
-</div>
-
-<!-- ================= GAME 2: FULL-SCREEN CASINO TEEN PATTI TABLE ================= -->
-<div id="tpCasinoScreen">
-  <div style="position:absolute; top:8px; left:14px; right:14px; z-index:30; display:flex; justify-content:space-between;">
-    <button style="width:34px; height:34px; border-radius:50%; background:#3b0764; border:1.5px solid #fbbf24; color:#fbbf24; font-weight:900;" onclick="closeTeenPatti()">❮</button>
-    <div style="background:rgba(0,0,0,0.6); border:1px solid #fbbf24; padding:4px 14px; border-radius:16px; font-size:11px; color:#fde68a;">Mode: Regular | 0.1% Commission</div>
-    <button style="width:34px; height:34px; border-radius:50%; background:#3b0764; border:1.5px solid #fbbf24; color:#fbbf24; font-weight:900;" onclick="triggerTableFreeze('टेबल रीचार्ज')">+</button>
-  </div>
-
-  <div class="dealer-avatar">👸🏽</div>
-
-  <div class="oval-table">
-    <div style="position:absolute; top:10px; background:rgba(0,0,0,0.6); border:1px solid #fde047; padding:2px 14px; border-radius:20px; font-size:13px; font-weight:900; color:#fde047;">🪙 <span id="tpPot">50.00</span></div>
-    <div style="font-size:24px; font-weight:900; color:rgba(15,23,42,0.3);">TEEN PATTI</div>
-    <div class="chips-area" id="tpChipsArea"></div>
-  </div>
-
-  <div id="tpStatus" style="position:absolute; top:52%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.85); border:1px solid #fbbf24; color:#fde047; padding:4px 14px; border-radius:20px; font-size:11px; font-weight:800; z-index:28; white-space:nowrap;">नया राउंड! ₹10 बूट जमा।</div>
-
-  <div class="seat-box s-tl" id="op0"></div>
-  <div class="seat-box s-bl" id="op1"></div>
-  <div class="seat-box s-tr" id="op2"></div>
-  <div class="seat-box s-br" id="op3"></div>
-
-  <div class="hero-seat">
-    <div class="green-timer"><div style="width:100%; height:100%; border-radius:50%; background:#0f172a; display:flex; justify-content:center; align-items:center; font-size:22px;">🐯</div></div>
-    <div class="hero-cards" id="heroCards" onclick="seeMyTpCards()"></div>
-  </div>
-
-  <div class="tp-bottom-bar">
-    <div style="display:flex; gap:6px;">
-      <button class="tp-btn" style="background:linear-gradient(180deg,#ef4444,#991b1b);" onclick="startTpRound()">Pack</button>
-      <button class="tp-btn" style="background:linear-gradient(180deg,#64748b,#334155);" onclick="showTpResult()">Show</button>
-    </div>
-    <div style="background:#0f172a; border:2px solid #f59e0b; border-radius:12px; padding:4px 16px; font-size:14px; font-weight:900; color:#fde047;">🪙 <span id="tpWallet">100.00</span></div>
-    <div style="display:flex; gap:6px;">
-      <button class="tp-btn" style="background:var(--green-btn);" id="tpBtn1" onclick="tpChaal(1)">Blind ₹10</button>
-      <button class="tp-btn" style="background:var(--green-btn);" id="tpBtn2" onclick="tpChaal(2)">Blind ₹20</button>
-    </div>
-  </div>
-</div>
-
-<!-- ================= 5-MINUTE TABLE FREEZE MODAL ================= -->
-<div class="freeze-overlay" id="freezeOverlay">
-  <div class="freeze-box">
-    <div style="font-size:16px; font-weight:900; color:#ef4444;">🚨 पूरी टेबल होल्ड (फ़्रीज़) है!</div>
-    <p id="freezeText" style="font-size:11px; color:#e2e8f0; margin-top:6px;">
-      बैलेंस कम होने के कारण सभी खिलाड़ियों की चाल 5 मिनट के लिए लॉक कर दी गई है।
-    </p>
-    <div style="font-size:34px; font-weight:900; color:#ef4444; margin:8px 0;" id="freezeClock">05:00</div>
-    <div style="background:#031714; border:1px solid #eab308; padding:8px; border-radius:10px; margin-bottom:10px;">
-      <div style="font-size:10px; color:#fde047;">UPI रीचार्ज आईडी:</div>
-      <div style="font-size:14px; font-weight:800;">rs970684@okaxis</div>
-    </div>
-    <button style="background:var(--green-btn); border:none; color:#fff; font-weight:900; padding:10px; border-radius:12px; width:100%; cursor:pointer;" onclick="completeRecharge()">₹200 रीचार्ज सफल (गेम चालू करें)</button>
-  </div>
+ </div>
 </div>
 
 <script>
-  const BACKEND_URL = "https://game-server-sc9z.onrender.com";
-  let balance = parseFloat(localStorage.getItem("uono_bal") || 100.00);
-  let audioOn = true, freezeInterval = null;
+(function(){
+ var BETS=[5,10,20,50,100,200], KEY='lg_play_coins';
+ var LINES=[[0,1,2],[3,4,5],[6,7,8],[0,4,8],[2,4,6]]; // cell index = row*3+col
+ var SYM=[
+  {id:'sap',c:'#3aa0ff',m:5,w:30},{id:'rub',c:'#ff3b4e',m:8,w:25},{id:'eme',c:'#2fe07a',m:12,w:20},
+  {id:'crown',m:25,w:12},{id:'wild',m:50,w:6}];
+ var TOTALW=SYM.reduce(function(a,s){return a+s.w},0);
 
-  /* Sound Generator */
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
-  function beep(freq, dur, type = 'sine') {
-    if (!audioOn) return;
-    if (ctx.state === 'suspended') ctx.resume();
-    const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = type; o.frequency.setValueAtTime(freq, ctx.currentTime);
-    g.gain.setValueAtTime(0.1, ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-    o.connect(g); g.connect(ctx.destination);
-    o.start(); o.stop(ctx.currentTime + dur);
-  }
-  function toggleAudio() { audioOn = !audioOn; document.getElementById("audioIcon").innerText = audioOn ? "🔊" : "🔇"; }
+ // ---- Hooks: connect these to your own app (all optional) ----
+ var hooks={
+  getBalance:function(){var v=parseFloat(localStorage.getItem(KEY));if(isNaN(v)){v=1000;localStorage.setItem(KEY,v)}return v},
+  setBalance:function(v){localStorage.setItem(KEY,v)},
+  onSettle:function(rec){/* rec={gameType,betAmount,wonAmount}; send to your server here if you want */},
+  onRecharge:null // set to a function to open your own cashier instead of the free refill
+ };
 
-  function updateWallet(val) {
-    balance = val;
-    localStorage.setItem("uono_bal", balance.toFixed(2));
-    document.getElementById("lobbyWallet").innerText = balance.toFixed(2);
-    document.getElementById("slotWallet").innerText = balance.toFixed(2);
-    document.getElementById("tpWallet").innerText = balance.toFixed(2);
-  }
-  updateWallet(balance);
+ var st={bet:1,spinning:false,sound:true,grid:[0,0,0,0,0,0,0,0,0],cells:[],ctx:null};
+ function $(i){return document.getElementById(i)}
+ function bal(){return hooks.getBalance()}
+ function fmt(n){return n.toFixed(2)}
+ function rnd(){var r=Math.random()*TOTALW;for(var i=0;i<SYM.length;i++){r-=SYM[i].w;if(r<0)return i}return 0}
 
-  /* Live Jackpot Counter */
-  let jp = 1103796;
-  setInterval(() => {
-    jp += Math.floor(Math.random() * 25) + 5;
-    document.getElementById("liveJpAmt").innerText = "₹" + jp.toLocaleString();
-  }, 1500);
+ function svg(s){
+  if(s.id==='crown')return '<span style="font-size:42px">👑</span>';
+  if(s.id==='wild')return '<span style="font-size:42px">🦁</span>';
+  var f=s.id==='sap'?'M12 2l8 7-8 13L4 9z':s.id==='rub'?'M12 2l9 10-9 10L3 12z':'M7 3h10l5 9-5 9H7l-5-9z';
+  return '<svg viewBox="0 0 24 24" style="color:'+s.c+'"><path d="'+f+'" fill="'+s.c+'" stroke="#fff" stroke-width="1.2"/><path d="M12 2v20M4 9h16" stroke="#fff6" stroke-width=".8"/></svg>';
+ }
+ function put(i,sym){st.cells[i].innerHTML=svg(SYM[sym])}
 
-  function claimWheelBonus() {
-    const won = [10, 20, 50][Math.floor(Math.random() * 3)];
-    updateWallet(balance + won);
-    alert(`🎡 Lucky Wheel में आपको ₹${won} बोनस मिला!`);
-  }
+ function build(){
+  var R=$('lgReels');R.innerHTML='';st.cells=[];
+  for(var c=0;c<3;c++){var col=document.createElement('div');col.className='lg-reel';
+   for(var r=0;r<3;r++){var d=document.createElement('div');d.className='lg-cell';col.appendChild(d);st.cells[r*3+c]=d}
+   R.appendChild(col)}
+  for(var i=0;i<9;i++){st.grid[i]=rnd();put(i,st.grid[i])}
+ }
 
-  /* ================= GAME 1: 500 LUCKY GEMS ENGINE ================= */
-  const gemSymbols = [
-    { icon: "💎", mult: 2 },   // Blue Sapphire
-    { icon: "♦️", mult: 3 },   // Red Ruby
-    { icon: "💚", mult: 4 },   // Green Emerald
-    { icon: "👑", mult: 8 },   // Royal Crown
-    { icon: "🐉", mult: 15 }   // Golden Dragon Wild
-  ];
-  let slotBet = 10, isSpinning = false;
+ // ---- Sound (Web Audio) ----
+ function tone(f,d,type,v,delay){
+  if(!st.sound)return;
+  try{
+   st.ctx=st.ctx||new (window.AudioContext||window.webkitAudioContext)();
+   var t=st.ctx.currentTime+(delay||0),o=st.ctx.createOscillator(),g=st.ctx.createGain();
+   o.type=type||'sine';o.frequency.value=f;g.gain.setValueAtTime(v||.08,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+   o.connect(g);g.connect(st.ctx.destination);o.start(t);o.stop(t+d);
+  }catch(e){}
+ }
+ function sfxWin(big){[523,659,784,1047].concat(big?[1319,1568]:[]).forEach(function(f,i){tone(f,.25,'triangle',.1,i*.09)})}
 
-  function openLuckyGems() {
-    document.getElementById("luckyGemsScreen").style.display = "flex";
-    renderInitialGems();
-  }
-  function closeLuckyGems() { document.getElementById("luckyGemsScreen").style.display = "none"; }
+ function refresh(){
+  $('lgBal').textContent=fmt(bal());$('lgBet').textContent=BETS[st.bet];
+  $('lgMinus').disabled=st.spinning||st.bet===0;$('lgUp').disabled=st.spinning||st.bet===BETS.length-1;
+  $('lgSpinBtn').disabled=st.spinning;$('lgPlus').disabled=st.spinning;
+ }
+ function msg(t){$('lgMsg').textContent=t}
 
-  function changeSlotBet(delta) {
-    if (isSpinning) return;
-    slotBet = Math.max(5, Math.min(200, slotBet + delta));
-    document.getElementById("slotBetAmt").innerText = slotBet;
-  }
+ function fx(cellIdx){
+  var app=$('lgApp'),b=st.cells[cellIdx].getBoundingClientRect(),a=app.getBoundingClientRect(),icons=['✨','⭐','💛','✦'];
+  for(var i=0;i<6;i++){var p=document.createElement('span');p.className='lg-fx';p.textContent=icons[i%4];
+   p.style.left=(b.left-a.left+b.width/2)+'px';p.style.top=(b.top-a.top+b.height/2)+'px';
+   p.style.setProperty('--dx',(Math.random()*120-60)+'px');p.style.setProperty('--dy',(Math.random()*120-60)+'px');
+   app.appendChild(p);setTimeout(function(q){return function(){q.remove()}}(p),1000)}
+ }
 
-  function renderInitialGems() {
-    const grid = document.getElementById("reelGrid");
-    grid.innerHTML = "";
-    for (let i = 0; i < 9; i++) {
-      const g = gemSymbols[i % gemSymbols.length];
-      grid.innerHTML += `<div class="gem-cell" id="gCell${i}">${g.icon}</div>`;
-    }
-  }
+ function evaluate(){
+  var wins=[],lineStake=BETS[st.bet]/5,total=0;
+  LINES.forEach(function(L){
+   var syms=L.map(function(i){return st.grid[i]}),base=-1;
+   for(var k=0;k<3;k++){if(SYM[syms[k]].id!=='wild'){base=syms[k];break}}
+   if(base===-1)base=4; // all wild
+   var ok=syms.every(function(s){return s===base||SYM[s].id==='wild'});
+   if(ok){var pay=lineStake*SYM[base].m;total+=pay;wins.push({line:L,pay:pay})}
+  });
+  return {wins:wins,total:total};
+ }
 
-  function spinLuckyGems() {
-    if (isSpinning) return;
-    if (balance < slotBet) { triggerTableFreeze(`₹${slotBet} स्पिन के लिए बैलेंस कम है।`); return; }
+ function pickMultiplier(){
+  var r=Math.random();
+  if(r<.002)return {m:500,id:'lgB500'};
+  if(r<.012)return {m:100,id:'lgB100'};
+  if(r<.10)return {m:5,id:'lgB5'};
+  return null;
+ }
 
-    isSpinning = true;
-    updateWallet(balance - slotBet);
-    document.getElementById("slotWinMsg").innerText = "रील्स घूम रही हैं...";
-    document.getElementById("reelFrame").classList.add("spinning");
-    ["mBox1", "mBox2", "mBox3"].forEach(id => document.getElementById(id).classList.remove("active-mult"));
+ function settle(won){
+  var rec={gameType:'500_LUCKY_GEMS',betAmount:BETS[st.bet],wonAmount:won};
+  try{hooks.onSettle(rec)}catch(e){}
+ }
 
-    let spinSound = setInterval(() => beep(400 + Math.random() * 400, 0.06, 'triangle'), 90);
+ // ---- Public API ----
+ window.openLuckyGems=function(){$('lgOverlay').classList.add('open');$('lgOverlay').setAttribute('aria-hidden','false');
+  if(!st.cells.length)build();$('lgWin').textContent='0.00';msg('Press SPIN');refresh()};
+ window.closeLuckyGems=function(){if(st.spinning)return;$('lgOverlay').classList.remove('open');$('lgOverlay').setAttribute('aria-hidden','true')};
 
-    setTimeout(() => {
-      clearInterval(spinSound);
-      document.getElementById("reelFrame").classList.remove("spinning");
-      isSpinning = false;
+ window.spinLuckyGems=function(){
+  if(st.spinning)return;
+  var bet=BETS[st.bet];
+  if(bal()<bet){msg('Not enough coins — tap + for free play coins');tone(180,.3,'sawtooth',.08);return}
+  st.spinning=true;hooks.setBalance(+(bal()-bet).toFixed(2));
+  $('lgWin').textContent='0.00';msg('Spinning...');
+  st.cells.forEach(function(c){c.classList.remove('win','land');c.classList.add('spin')});
+  ['lgB5','lgB100','lgB500'].forEach(function(i){$(i).classList.remove('hit')});
+  refresh();
+  var final=[];for(var i=0;i<9;i++)final.push(rnd());
+  var iv=setInterval(function(){
+   for(var i=0;i<9;i++){if(st.cells[i].classList.contains('spin'))put(i,rnd())}
+   tone(300+Math.random()*100,.04,'square',.02);
+  },70);
+  [0,1,2].forEach(function(col){
+   setTimeout(function(){
+    for(var r=0;r<3;r++){var i=r*3+col;st.grid[i]=final[i];put(i,final[i]);
+     st.cells[i].classList.remove('spin');st.cells[i].classList.add('land')}
+    tone(220,.12,'triangle',.12);
+    if(col===2){clearInterval(iv);setTimeout(finish,300)}
+   },900+col*450);
+  });
+ };
 
-      // Generate 9 gems
-      let board = [];
-      for (let i = 0; i < 9; i++) {
-        const pick = gemSymbols[Math.floor(Math.random() * gemSymbols.length)];
-        board.push(pick);
-        const cell = document.getElementById("gCell" + i);
-        cell.innerText = pick.icon;
-        cell.classList.remove("win-glow");
-      }
+ function finish(){
+  var res=evaluate(),won=res.total,mult=null;
+  if(won>0){
+   mult=pickMultiplier();
+   if(mult){won*=mult.m;$(mult.id).classList.add('hit')}
+   res.wins.forEach(function(w){w.line.forEach(function(i){st.cells[i].classList.add('win');fx(i)})});
+   var f=document.createElement('div');f.className='lg-flash';$('lgApp').appendChild(f);setTimeout(function(){f.remove()},500);
+   won=+won.toFixed(2);hooks.setBalance(+(bal()+won).toFixed(2));
+   $('lgWin').textContent=fmt(won);
+   msg((mult?mult.m+'x BONUS! ':'')+'You won '+fmt(won)+'!');
+   sfxWin(!!mult||won>=BETS[st.bet]*10);
+  } else msg('No win — try again');
+  settle(won);
+  st.spinning=false;refresh();
+ }
 
-      // Check 3 Horizontal Paylines + 2 Diagonals
-      const lines = [[0,1,2], [3,4,5], [6,7,8], [0,4,8], [2,4,6]];
-      let totalMult = 0;
-      lines.forEach(line => {
-        const [a, b, c] = line;
-        if (board[a].icon === board[b].icon && board[b].icon === board[c].icon) {
-          totalMult += board[a].mult;
-          [a, b, c].forEach(idx => document.getElementById("gCell" + idx).classList.add("win-glow"));
-        }
-      });
-
-      // Side Pillar Bonus Multiplier
-      const bonusRoll = Math.random();
-      let pillarMult = 1;
-      if (totalMult > 0) {
-        if (bonusRoll > 0.85) { pillarMult = 5; document.getElementById("mBox1").classList.add("active-mult"); }
-        else if (bonusRoll > 0.95) { pillarMult = 10; document.getElementById("mBox3").classList.add("active-mult"); }
-      }
-
-      if (totalMult > 0) {
-        const grossWin = slotBet * totalMult * pillarMult;
-        const netWin = grossWin * 0.999; // 0.1% commission
-        updateWallet(balance + netWin);
-        document.getElementById("lastSlotWin").innerText = "₹" + netWin.toFixed(2);
-        document.getElementById("slotWinMsg").innerText = `🎉 SUPER WIN! आपने ₹${netWin.toFixed(2)} जीते!`;
-        [523, 659, 784, 1046].forEach((f, idx) => setTimeout(() => beep(f, 0.18), idx * 90));
-        syncServer("LUCKY_GEMS_500", slotBet, netWin);
-      } else {
-        document.getElementById("slotWinMsg").innerText = "कोई लाइन नहीं बनी, फिर से SPIN दबाएं!";
-      }
-    }, 1100);
-  }
-
-  /* ================= GAME 2: 5-PLAYER CASINO TEEN PATTI ENGINE ================= */
-  let tpPot = 50, tpSeen = false, tpHand = [], tpOps = [];
-  const suits = ["♠", "♥", "♦", "♣"];
-  const ranks = [{l:"2",v:2},{l:"3",v:3},{l:"4",v:4},{l:"5",v:5},{l:"6",v:6},{l:"7",v:7},{l:"8",v:8},{l:"9",v:9},{l:"10",v:10},{l:"J",v:11},{l:"Q",v:12},{l:"K",v:13},{l:"A",v:14}];
-
-  function evalTp(c) {
-    let s = [...c].sort((a,b) => b.v - a.v);
-    let flush = s[0].s === s[1].s && s[1].s === s[2].s;
-    let straight = (s[0].v - s[1].v === 1 && s[1].v - s[2].v === 1) || (s[0].v === 14 && s[1].v === 3 && s[2].v === 2);
-    let trail = s[0].v === s[1].v && s[1].v === s[2].v;
-    let pair = s[0].v === s[1].v || s[1].v === s[2].v;
-    if (trail) return { score: 600 + s[0].v, name: "Trail" };
-    if (flush && straight) return { score: 500 + s[0].v, name: "Pure Seq" };
-    if (straight) return { score: 400 + s[0].v, name: "Sequence" };
-    if (flush) return { score: 300 + s[0].v, name: "Color" };
-    if (pair) return { score: 200 + s[1].v, name: "Pair" };
-    return { score: 100 + s[0].v, name: "High Card" };
-  }
-
-  function openTeenPatti() {
-    if (balance < 10) { triggerTableFreeze("Teen Patti जॉइन करने के लिए ₹10 चाहिए।"); return; }
-    document.getElementById("tpCasinoScreen").style.display = "block";
-    startTpRound();
-  }
-  function closeTeenPatti() { document.getElementById("tpCasinoScreen").style.display = "none"; }
-
-  function startTpRound() {
-    if (balance < 10) { triggerTableFreeze("अगले राउंड के लिए ₹10 बूट चाहिए।"); return; }
-    let deck = [];
-    for (let s of suits) for (let r of ranks) deck.push({ s, l: r.l, v: r.v });
-    deck.sort(() => Math.random() - 0.5);
-
-    tpHand = [deck.pop(), deck.pop(), deck.pop()];
-    tpSeen = false; tpPot = 50;
-    updateWallet(balance - 10);
-    document.getElementById("tpPot").innerText = tpPot.toFixed(2);
-    document.getElementById("tpStatus").innerText = "सभी 5 खिलाड़ियों ने ₹10 बूट जमा किया!";
-    document.getElementById("tpChipsArea").innerHTML = "";
-    for (let i = 0; i < 5; i++) addTpChip(10);
-
-    tpOps = [
-      { name: "Lakhvir", pic: "👵", cards: [deck.pop(), deck.pop(), deck.pop()] },
-      { name: "Neha", pic: "👧", cards: [deck.pop(), deck.pop(), deck.pop()] },
-      { name: "Vikram", pic: "🧔", cards: [deck.pop(), deck.pop(), deck.pop()] },
-      { name: "Aman", pic: "🤵", cards: [deck.pop(), deck.pop(), deck.pop()] }
-    ];
-    tpOps.forEach((o, i) => {
-      document.getElementById("op" + i).innerHTML = `
-        <div class="op-pic">${o.pic}</div>
-        <div class="mini-cards"><div class="m-card"></div><div class="m-card"></div><div class="m-card"></div></div>
-      `;
-    });
-    renderHeroCards(false);
-    document.getElementById("tpBtn1").innerText = "Blind ₹10";
-    document.getElementById("tpBtn2").innerText = "Blind ₹20";
-  }
-
-  function addTpChip(v) {
-    const cols = ["#ef4444", "#f59e0b", "#ec4899", "#10b981"];
-    const c = document.createElement("div");
-    c.className = "chip"; c.style.background = cols[Math.floor(Math.random()*cols.length)]; c.innerText = v;
-    document.getElementById("tpChipsArea").appendChild(c);
-  }
-
-  function renderHeroCards(show) {
-    const box = document.getElementById("heroCards");
-    box.innerHTML = "";
-    tpHand.forEach(c => {
-      const d = document.createElement("div");
-      if (!show) d.className = "p-card back";
-      else {
-        const red = c.s === "♥" || c.s === "♦";
-        d.className = "p-card"; if (red) d.style.color = "#dc2626";
-        d.innerHTML = `${c.l}<br>${c.s}`;
-      }
-      box.appendChild(d);
-    });
-    if (!show) box.innerHTML += `<button class="btn-see">See</button>`;
-  }
-
-  function seeMyTpCards() {
-    if (tpSeen) return;
-    tpSeen = true; renderHeroCards(true);
-    document.getElementById("tpBtn1").innerText = "Chaal ₹20";
-    document.getElementById("tpBtn2").innerText = "Chaal ₹40";
-    document.getElementById("tpStatus").innerText = `आपके पत्ते: ${evalTp(tpHand).name}`;
-  }
-
-  function tpChaal(mult) {
-    const cost = (tpSeen ? 20 : 10) * mult;
-    if (balance < cost) { triggerTableFreeze(`चाल चलने के लिए ₹${cost} चाहिए।`); return; }
-    updateWallet(balance - cost);
-    tpPot += cost * 3;
-    addTpChip(cost); addTpChip(cost);
-    document.getElementById("tpPot").innerText = tpPot.toFixed(2);
-    document.getElementById("tpStatus").innerText = `आपने ₹${cost} चाल चली! पॉट: ₹${tpPot}`;
-  }
-
-  function showTpResult() {
-    if (!tpSeen) seeMyTpCards();
-    const myS = evalTp(tpHand).score;
-    let maxOp = 0;
-    tpOps.forEach(o => maxOp = Math.max(maxOp, evalTp(o.cards).score));
-
-    if (myS >= maxOp) {
-      const win = tpPot * 0.999;
-      updateWallet(balance + win);
-      document.getElementById("tpStatus").innerText = `🎉 ${evalTp(tpHand).name} से आप ₹${win.toFixed(2)} जीते!`;
-      syncServer("TEEN_PATTI_VIP", 10, win);
-    } else {
-      document.getElementById("tpStatus").innerText = "❌ इस शो में विरोधी के पत्ते बड़े निकले!";
-    }
-    setTimeout(startTpRound, 2200);
-  }
-
-  /* ================= 5-MINUTE TABLE FREEZE ================= */
-  function triggerTableFreeze(reason) {
-    document.getElementById("freezeText").innerText = reason + " सभी खिलाड़ियों की टेबल 5 मिनट के लिए लॉक है।";
-    document.getElementById("freezeOverlay").style.display = "flex";
-    let sec = 300;
-    clearInterval(freezeInterval);
-    freezeInterval = setInterval(() => {
-      sec--;
-      const m = Math.floor(sec / 60).toString().padStart(2, '0');
-      const s = (sec % 60).toString().padStart(2, '0');
-      document.getElementById("freezeClock").innerText = `${m}:${s}`;
-      if (sec <= 0) { clearInterval(freezeInterval); document.getElementById("freezeOverlay").style.display = "none"; }
-    }, 1000);
-  }
-
-  function completeRecharge() {
-    updateWallet(balance + 200);
-    clearInterval(freezeInterval);
-    document.getElementById("freezeOverlay").style.display = "none";
-  }
-
-  function syncServer(gameType, betAmount, wonAmount) {
-    fetch(`${BACKEND_URL}/api/game/settle`, {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: "9706842026", gameType, betAmount, wonAmount })
-    }).catch(() => {});
-  }
+ window.LG={
+  hooks:hooks,
+  bet:function(d){if(st.spinning)return;st.bet=Math.max(0,Math.min(BETS.length-1,st.bet+d));tone(500,.05,'square',.05);refresh()},
+  refill:function(){
+   if(st.spinning)return;
+   if(typeof hooks.onRecharge==='function'){hooks.onRecharge();return}
+   hooks.setBalance(+(bal()+1000).toFixed(2));msg('+1000 free play coins');tone(880,.15,'triangle',.1);refresh();
+  },
+  toggleSound:function(){st.sound=!st.sound;$('lgSnd').textContent=st.sound?'🔊':'🔇'}
+ };
+})();
 </script>
-</body>
-</html>
+<!-- Usage: <button onclick="openLuckyGems()">Play 500 Lucky Gems</button> -->
