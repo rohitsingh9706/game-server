@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>UONO VIP - Royal Teen Patti & Multi-Game Arena</title>
+  <title>UONO VIP - Royal Teen Patti & Gaming Arena</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -18,7 +18,7 @@
     .app-shell {
       width: 100%; max-width: 440px; min-height: 100vh;
       background: radial-gradient(circle at top, #0c4237 0%, #041a16 65%, #020f0d 100%);
-      position: relative; padding-bottom: 70px; box-shadow: 0 0 40px rgba(0,0,0,0.9);
+      position: relative; padding-bottom: 72px; box-shadow: 0 0 40px rgba(0,0,0,0.9);
     }
 
     .top-bar {
@@ -51,18 +51,18 @@
     .cat-tab.active { background: linear-gradient(180deg, #34d399, #059669); color: #022c22; }
 
     .jackpot-box {
-      margin: 0 10px 8px 10px; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
+      margin: 0 10px 10px 10px; background: linear-gradient(135deg, #064e3b 0%, #022c22 100%);
       border: 2px solid #eab308; border-radius: 14px; padding: 10px 12px;
       display: flex; justify-content: space-between; align-items: center;
     }
     .jp-amount { font-size: 24px; font-weight: 900; background: var(--gold-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .btn-view-jp { background: var(--gold-grad); color: #422006; border: none; padding: 6px 10px; border-radius: 8px; font-size: 10px; font-weight: 900; cursor: pointer; margin-top: 4px; }
+    .btn-view-jp { background: var(--gold-grad); color: #422006; border: none; padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; cursor: pointer; margin-top: 4px; }
 
     .games-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; padding: 0 10px; }
     .game-tile {
       border-radius: 14px; border: 1.5px solid #eab308; position: relative; aspect-ratio: 1 / 1.08;
       display: flex; flex-direction: column; justify-content: space-between; align-items: center;
-      padding: 6px 4px; cursor: pointer; box-shadow: 0 5px 12px rgba(0,0,0,0.6);
+      padding: 6px 4px; cursor: pointer; box-shadow: 0 5px 12px rgba(0,0,0,0.6); transition: transform 0.15s;
     }
     .game-tile:active { transform: scale(0.95); }
     .tag-hot { position: absolute; top: 0; left: 0; background: linear-gradient(90deg, #ef4444, #f97316); font-size: 8px; font-weight: 900; padding: 1px 6px; border-radius: 0 0 8px 0; }
@@ -80,13 +80,22 @@
     .dock-item.active { color: #fde047; transform: translateY(-3px); }
     .dock-icon { font-size: 22px; display: block; }
 
+    /* Sub-tabs (Bank, Wheel, Refer) */
+    .sub-view { display: none; padding: 12px; }
+    .emerald-card { background: linear-gradient(180deg, #0d4a3e 0%, #05241e 100%); border: 1.5px solid #eab308; border-radius: 16px; padding: 14px; margin-bottom: 12px; text-align: center; }
+    .btn-royal-green { background: var(--green-btn); border: 1.5px solid #bbf7d0; color: #fff; font-weight: 800; padding: 10px; border-radius: 12px; width: 100%; cursor: pointer; font-size: 13px; }
+    .wheel-disc {
+      width: 220px; height: 220px; border-radius: 50%; margin: 14px auto; border: 8px solid #eab308;
+      background: conic-gradient(#16a34a 0deg 60deg, #facc15 60deg 120deg, #059669 120deg 180deg, #eab308 180deg 240deg, #15803d 240deg 300deg, #fde047 300deg 360deg);
+      display: flex; justify-content: center; align-items: center; transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    }
+
     /* ================= 2. FULL-SCREEN CASINO TEEN PATTI TABLE (AUTO-LANDSCAPE) ================= */
     #tpCasinoOverlay {
       display: none; position: fixed; inset: 0; z-index: 900;
       background: radial-gradient(circle at 50% 20%, #4c1d95 0%, #1e1b4b 55%, #0f0722 100%);
       overflow: hidden;
     }
-    /* Auto-rotate table to landscape on portrait mobile */
     @media screen and (orientation: portrait) {
       #tpCasinoOverlay {
         width: 100vh; height: 100vw;
@@ -105,7 +114,6 @@
     }
     .mode-pill { background: rgba(0,0,0,0.6); border: 1px solid rgba(251,191,36,0.3); padding: 4px 14px; border-radius: 16px; font-size: 11px; color: #fde68a; }
 
-    /* Female Dealer Top Center */
     .dealer-girl {
       position: absolute; top: 2px; left: 50%; transform: translateX(-50%); z-index: 20;
       width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(180deg, #f59e0b, #78350f);
@@ -113,7 +121,6 @@
       font-size: 36px; box-shadow: 0 4px 15px rgba(0,0,0,0.85);
     }
 
-    /* Royal Blue Felt Oval Table */
     .oval-felt {
       position: absolute; top: 46px; left: 12%; right: 12%; bottom: 48px;
       background: radial-gradient(ellipse at center, #3b82f6 0%, #1d4ed8 55%, #1e3a8a 100%);
@@ -124,11 +131,10 @@
     .felt-logo { font-size: 26px; font-weight: 900; color: rgba(15, 23, 42, 0.28); letter-spacing: 2px; pointer-events: none; }
 
     .pot-counter-pill {
-      position: absolute; top: 10px; background: rgba(0,0,0,0.5); border: 1px solid #fde047;
+      position: absolute; top: 10px; background: rgba(0,0,0,0.55); border: 1px solid #fde047;
       padding: 2px 14px; border-radius: 20px; font-size: 13px; font-weight: 900; color: #fde047;
     }
 
-    /* Scattered Casino Chips */
     .chips-pile {
       width: 210px; height: 64px; display: flex; flex-wrap: wrap;
       justify-content: center; align-items: center; gap: 3px; margin-bottom: 14px;
@@ -140,7 +146,6 @@
     }
     @keyframes chipPop { from { transform: scale(1.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
-    /* 4 Corner Opponent Seats */
     .op-corner { position: absolute; display: flex; align-items: center; gap: 6px; z-index: 25; }
     .c-tl { top: 54px; left: 16px; }
     .c-bl { bottom: 58px; left: 16px; }
@@ -162,7 +167,6 @@
     .op-badge.packed { color: #38bdf8; }
     .op-stake { font-size: 9px; color: #fde047; font-weight: 800; text-align: center; margin-top: 2px; }
 
-    /* Bottom Player Seat + Green Timer Ring */
     .my-table-seat {
       position: absolute; bottom: 44px; left: 50%; transform: translateX(-50%); z-index: 30;
       display: flex; align-items: center; gap: 10px;
@@ -203,7 +207,6 @@
       color: #fde047; font-size: 11px; font-weight: 900; text-align: center; border-radius: 4px;
     }
 
-    /* Lightning Show Beam */
     #lightningShow {
       display: none; position: absolute; top: 62%; left: 36%; width: 44%; height: 6px;
       background: linear-gradient(90deg, #38bdf8, #ffffff, #a855f7);
@@ -211,7 +214,13 @@
       transform: rotate(-8deg); border-radius: 10px;
     }
 
-    /* Bottom Action Controls */
+    #tableStatusBanner {
+      position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.82); border: 1px solid #fbbf24; color: #fde047;
+      padding: 4px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; z-index: 28;
+      white-space: nowrap;
+    }
+
     .table-footer-bar {
       position: absolute; bottom: 6px; left: 14px; right: 14px; z-index: 35;
       display: flex; justify-content: space-between; align-items: center; gap: 8px;
@@ -242,7 +251,7 @@
 </head>
 <body>
 
-<!-- ================= MAIN EMERALD-GOLD LOBBY ================= -->
+<!-- ================= 1. MAIN EMERALD-GOLD LOBBY ================= -->
 <div class="app-shell">
   <div class="top-bar">
     <div class="user-pill">
@@ -262,48 +271,83 @@
     <div style="font-size:18px; cursor:pointer;" onclick="toggleSound()" id="soundToggleBtn">🔊</div>
   </div>
 
-  <div class="winner-toast">
-    <span>🔥 <strong id="winUser">jit***isa (UID:18719920)</strong></span>
-    <span style="color:#fde047; font-weight:800;" id="winAmt">Win: ₹18,315</span>
-  </div>
-
-  <!-- Category Tabs -->
-  <div class="cat-bar">
-    <div class="cat-tab" onclick="filterLobby('ALL', this)"><span>❤️</span>Fav</div>
-    <div class="cat-tab" onclick="filterLobby('SLOTS', this)"><span>🎰</span>SLOTS</div>
-    <div class="cat-tab" onclick="filterLobby('AVIATOR', this)"><span>🚀</span>Crash</div>
-    <div class="cat-tab active" onclick="filterLobby('SKILL', this)"><span>🃏</span>Cards</div>
-    <div class="cat-tab" onclick="filterLobby('MULTI', this)"><span>🎡</span>Multi</div>
-    <div class="cat-tab" onclick="filterLobby('FISH', this)"><span>🦈</span>Fish</div>
-  </div>
-
-  <!-- Live Jackpot Banner -->
-  <div class="jackpot-box">
-    <div>
-      <div style="font-size:11px; font-weight:900; color:#4ade80;">JACKPOT LOTTO <span style="background:#ef4444; color:#fff; font-size:8px; padding:1px 5px; border-radius:4px;">LIVE</span></div>
-      <div class="jp-amount" id="jpCounter">₹618,148</div>
-      <div style="font-size:9px; color:#a7f3d0;">🕒 Draw In: 17:10:55 | Random & Provably Fair</div>
+  <div id="tabGameView">
+    <div class="winner-toast">
+      <span>🔥 <strong id="winUser">jit***isa (UID:18719920)</strong></span>
+      <span style="color:#fde047; font-weight:800;" id="winAmt">Win: ₹18,315</span>
     </div>
-    <div style="text-align:center;">
-      <div style="font-size:32px;">🎰</div>
-      <button class="btn-view-jp" onclick="openTeenPattiTable()">Play Teen Patti</button>
+
+    <!-- Category Tabs -->
+    <div class="cat-bar">
+      <div class="cat-tab" onclick="filterLobby('ALL', this)"><span>❤️</span>Fav</div>
+      <div class="cat-tab" onclick="filterLobby('SLOTS', this)"><span>🎰</span>SLOTS</div>
+      <div class="cat-tab" onclick="filterLobby('AVIATOR', this)"><span>🚀</span>Crash</div>
+      <div class="cat-tab active" onclick="filterLobby('SKILL', this)"><span>🃏</span>Cards</div>
+      <div class="cat-tab" onclick="filterLobby('MULTI', this)"><span>🎡</span>Multi</div>
+      <div class="cat-tab" onclick="filterLobby('FISH', this)"><span>🦈</span>Fish</div>
+    </div>
+
+    <!-- Live Jackpot Banner -->
+    <div class="jackpot-box">
+      <div>
+        <div style="font-size:11px; font-weight:900; color:#4ade80;">JACKPOT LOTTO <span style="background:#ef4444; color:#fff; font-size:8px; padding:1px 5px; border-radius:4px;">LIVE</span></div>
+        <div class="jp-amount" id="jpCounter">₹618,148</div>
+        <div style="font-size:9px; color:#a7f3d0;">🕒 Draw In: 17:10:55 | 0.1% Commission</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:32px;">🎰</div>
+        <button class="btn-view-jp" onclick="openTeenPattiTable()">Play Teen Patti</button>
+      </div>
+    </div>
+
+    <!-- 3-Column Game Grid -->
+    <div class="games-grid" id="lobbyGamesGrid"></div>
+  </div>
+
+  <!-- Bank Tab -->
+  <div id="tabBankView" class="sub-view">
+    <div class="emerald-card">
+      <div style="font-size:12px; color:#fde047; font-weight:800;">TOTAL WALLET BALANCE</div>
+      <div style="font-size:32px; font-weight:900; margin:6px 0;" id="bankBalDisplay">₹100.00</div>
+      <button class="btn-royal-green" style="margin-bottom:8px;" onclick="triggerTableFreeze('डिपॉज़िट')">+ ADD CASH (UPI)</button>
+      <button class="btn-view-jp" style="width:100%; padding:10px; font-size:13px;" onclick="alert('इंस्टेंट UPI विथड्रॉल: rs970684@okaxis')">WITHDRAW INSTANTLY</button>
     </div>
   </div>
 
-  <!-- 3-Column Game Grid -->
-  <div class="games-grid" id="lobbyGamesGrid"></div>
+  <!-- Wheel Tab -->
+  <div id="tabWheelView" class="sub-view">
+    <div class="emerald-card">
+      <div style="font-size:16px; font-weight:900; color:#fde047;">🎡 LUCKY SPIN WHEEL</div>
+      <div class="wheel-disc" id="wheelDisc">
+        <button style="width:60px; height:60px; border-radius:50%; background:var(--gold-grad); border:2px solid #fff; font-weight:900; cursor:pointer;" onclick="spinLuckyWheel()">SPIN</button>
+      </div>
+      <button class="btn-royal-green" onclick="spinLuckyWheel()">SPIN NOW</button>
+    </div>
+  </div>
+
+  <!-- Refer Tab -->
+  <div id="tabReferView" class="sub-view">
+    <div class="emerald-card">
+      <div style="font-size:16px; font-weight:900; color:#fde047;">🤝 3-LEVEL REFER & EARN</div>
+      <p style="font-size:12px; color:#a7f3d0; margin:8px 0;">Level A: 0.6% Bet + 60% Tax | Level B: 0.2% | Level C: 0.1%</p>
+      <div style="background:#031714; padding:8px; border-radius:10px; font-size:10px; color:#fde047; margin-bottom:10px;">
+        https://rohitsingh9706.github.io/game-server/?ref=40747709
+      </div>
+      <button class="btn-royal-green" onclick="alert('रेफरल लिंक कॉपी हो गया!')">COPY & SHARE LINK</button>
+    </div>
+  </div>
 
   <!-- Bottom 5-Tab Dock -->
   <div class="bottom-dock">
-    <div class="dock-item" onclick="triggerTableFreeze('बैंक / डिपॉज़िट')"><span class="dock-icon">🏦</span>Bank</div>
-    <div class="dock-item active"><span class="dock-icon">🎰</span>Game</div>
-    <div class="dock-item" onclick="spinBonus()"><span class="dock-icon">🎡</span>Lucky Wheel</div>
-    <div class="dock-item" onclick="alert('रेफरल लिंक: https://rohitsingh9706.github.io/game-server/?ref=40747709')"><span class="dock-icon">🤝</span>Refer & Earn</div>
-    <div class="dock-item" onclick="alert('डेली बोनस ₹5 क्लेम किया गया!')"><span class="dock-icon">🎁</span>Events</div>
+    <div class="dock-item" onclick="switchDock('tabBankView', this)"><span class="dock-icon">🏦</span>Bank</div>
+    <div class="dock-item active" onclick="switchDock('tabGameView', this)"><span class="dock-icon">🎰</span>Game</div>
+    <div class="dock-item" onclick="switchDock('tabWheelView', this)"><span class="dock-icon">🎡</span>Lucky Wheel</div>
+    <div class="dock-item" onclick="switchDock('tabReferView', this)"><span class="dock-icon">🤝</span>Refer & Earn</div>
+    <div class="dock-item" onclick="alert('डेली चेक-इन बोनस ₹5 क्लेम किया गया!')"><span class="dock-icon">🎁</span>Events</div>
   </div>
 </div>
 
-<!-- ================= FULL-SCREEN CASINO TEEN PATTI TABLE ================= -->
+<!-- ================= 2. FULL-SCREEN CASINO TEEN PATTI TABLE ================= -->
 <div id="tpCasinoOverlay">
   <div class="table-top-hud">
     <div style="display:flex; gap:8px; align-items:center;">
@@ -315,17 +359,15 @@
     </div>
   </div>
 
-  <!-- Female Dealer -->
   <div class="dealer-girl">👸🏽</div>
 
-  <!-- Royal Blue Oval Table -->
   <div class="oval-felt">
     <div class="pot-counter-pill">🪙 <span id="tpPotAmt">50.00</span></div>
     <div class="felt-logo">TEEN PATTI</div>
     <div class="chips-pile" id="chipsPile"></div>
   </div>
 
-  <!-- Lightning Show Beam -->
+  <div id="tableStatusBanner">नया राउंड! ₹10 बूट जमा।</div>
   <div id="lightningShow"></div>
 
   <!-- 4 Opponent Seats -->
@@ -347,7 +389,7 @@
   <div class="table-footer-bar">
     <div style="display:flex; gap:6px;">
       <button class="btn-act act-pack" onclick="packRound()">Pack</button>
-      <button class="btn-act act-side" onclick="showCardsBattle()">Side Show</button>
+      <button class="btn-act act-side" onclick="showCardsBattle()">Show</button>
     </div>
     <div class="table-bal-box">🪙 <span id="tableBal">100.00</span></div>
     <div style="display:flex; gap:6px;">
@@ -378,7 +420,87 @@
   let balance = parseFloat(localStorage.getItem("uono_bal") || 100.00);
   let soundOn = true, freezeTimer = null;
 
-  /* Sound Synthesizer */
+  /* ================= REFACTORED CORE OOP CARD ENGINE (FROM YOUR REPO) ================= */
+  const Suit = Object.freeze({ Spade: 4, Heart: 3, Diamond: 2, Clubs: 1 });
+
+  class Card {
+    constructor(name_, suit_) {
+      this.card_name = name_; // 1 (Ace) to 13 (King)
+      this.card_suit = suit_;
+    }
+    get_suit_symbol() {
+      if (this.card_suit === 4) return "♠";
+      if (this.card_suit === 3) return "♥";
+      if (this.card_suit === 2) return "♦";
+      return "♣";
+    }
+    get_name() {
+      if (this.card_name === 1) return "A";
+      if (this.card_name === 11) return "J";
+      if (this.card_name === 12) return "Q";
+      if (this.card_name === 13) return "K";
+      return this.card_name.toString();
+    }
+    get_rank_val() {
+      return this.card_name === 1 ? 14 : this.card_name;
+    }
+    is_red() {
+      return this.card_suit === 3 || this.card_suit === 2;
+    }
+  }
+
+  class Deck {
+    constructor() {
+      this.all_cards = [];
+      for (let i = 1; i < 14; i++) {
+        this.all_cards.push(new Card(i, Suit.Spade));
+        this.all_cards.push(new Card(i, Suit.Heart));
+        this.all_cards.push(new Card(i, Suit.Diamond));
+        this.all_cards.push(new Card(i, Suit.Clubs));
+      }
+    }
+    shuffle() {
+      // Fixed Fisher-Yates Algorithm
+      for (let i = this.all_cards.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [this.all_cards[i], this.all_cards[j]] = [this.all_cards[j], this.all_cards[i]];
+      }
+    }
+    top() {
+      return this.all_cards.pop();
+    }
+  }
+
+  class Triple {
+    constructor(c1, c2, c3) {
+      // Sort by Teen Patti rank value (Ace = 14)
+      this.hand = [c1, c2, c3].sort((a, b) => a.get_rank_val() - b.get_rank_val());
+      const v0 = this.hand[0].get_rank_val();
+      const v1 = this.hand[1].get_rank_val();
+      const v2 = this.hand[2].get_rank_val();
+
+      this.trial = (v0 === v1 && v1 === v2);
+      this.color = (this.hand[0].card_suit === this.hand[1].card_suit && this.hand[1].card_suit === this.hand[2].card_suit);
+
+      // Sequence check including A-2-3 (vals: 2, 3, 14) and A-K-Q (vals: 12, 13, 14)
+      const isNormalRun = (v1 - v0 === 1 && v2 - v1 === 1);
+      const isA23 = (v0 === 2 && v1 === 3 && v2 === 14);
+      this.run = isNormalRun || isA23;
+
+      this.color_run = (this.run && this.color);
+      this.double = !this.trial && (v0 === v1 || v1 === v2);
+
+      // Compute exact numeric score for winner comparison
+      if (this.trial) { this.score = 6000 + v2; this.label = "Trail (तीन एक जैसे)"; }
+      else if (this.color_run) { this.score = 5000 + v2; this.label = "Pure Sequence"; }
+      else if (this.run) { this.score = 4000 + v2; this.label = "Sequence"; }
+      else if (this.color) { this.score = 3000 + v2; this.label = "Color"; }
+      else if (this.double) { this.score = 2000 + v1; this.label = "Pair"; }
+      else { this.score = 1000 + v2; this.label = "High Card"; }
+    }
+  }
+
+  /* ================= SOUND & WALLET SYNC ================= */
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   function playBeep(freq, dur, type = 'sine') {
     if (!soundOn) return;
@@ -397,10 +519,18 @@
     localStorage.setItem("uono_bal", balance.toFixed(2));
     document.getElementById("lobbyBal").innerText = balance.toFixed(2);
     document.getElementById("tableBal").innerText = balance.toFixed(2);
+    document.getElementById("bankBalDisplay").innerText = "₹" + balance.toFixed(2);
   }
   updateBal(balance);
 
-  /* Lobby Games Data */
+  /* Live Jackpot & Winner Ticker */
+  let jpVal = 618148;
+  setInterval(() => {
+    jpVal += Math.floor(Math.random() * 19) + 3;
+    document.getElementById("jpCounter").innerText = "₹" + jpVal.toLocaleString();
+  }, 1500);
+
+  /* ================= LOBBY UI & NAVIGATION ================= */
   const games = [
     { id: "tp", name: "Uono Teen Patti", cat: "SKILL", icon: "🤵🃏", bg: "linear-gradient(180deg,#b45309,#451a03)", hot: true, jp: "5-Player VIP" },
     { id: "joker", name: "Joker TP", cat: "SKILL", icon: "🤡", bg: "linear-gradient(180deg,#2563eb,#1e3a8a)", hot: true, jp: "LIVE" },
@@ -419,10 +549,7 @@
     list.forEach(g => {
       const d = document.createElement("div");
       d.className = "game-tile"; d.style.background = g.bg;
-      d.onclick = () => {
-        if (g.id === "tp" || g.id === "joker") openTeenPattiTable();
-        else alert(`${g.name} का फुल-स्क्रीन टेबल अगले स्टेप में जुड़ेगा! अभी Uono Teen Patti पर क्लिक करके असली कैसीनो टेबल खेलें।`);
-      };
+      d.onclick = () => openTeenPattiTable();
       d.innerHTML = `
         ${g.hot ? '<span class="tag-hot">HOT</span>' : ''}
         <span class="tag-jp">${g.jp}</span>
@@ -441,33 +568,26 @@
     renderLobby(cat === "ALL" ? games : games.filter(g => g.cat === cat));
   }
 
-  function spinBonus() {
-    const won = [10, 20, 50][Math.floor(Math.random() * 3)];
-    updateBal(balance + won);
-    alert(`🎡 Lucky Wheel में आपको ₹${won} बोनस मिला!`);
+  function switchDock(viewId, el) {
+    ["tabGameView", "tabBankView", "tabWheelView", "tabReferView"].forEach(id => document.getElementById(id).style.display = "none");
+    document.getElementById(viewId).style.display = "block";
+    document.querySelectorAll(".dock-item").forEach(d => d.classList.remove("active"));
+    el.classList.add("active");
   }
 
-  /* ================= CASINO TEEN PATTI ENGINE ================= */
-  let boot = 10, stake = 10, pot = 50, isSeen = false, roundNo = 1, myHand = [], ops = [];
-  const suits = ["♠", "♥", "♦", "♣"];
-  const ranks = [
-    {l:"2",v:2},{l:"3",v:3},{l:"4",v:4},{l:"5",v:5},{l:"6",v:6},{l:"7",v:7},
-    {l:"8",v:8},{l:"9",v:9},{l:"10",v:10},{l:"J",v:11},{l:"Q",v:12},{l:"K",v:13},{l:"A",v:14}
-  ];
-
-  function evaluateCards(c) {
-    let s = [...c].sort((a, b) => b.v - a.v);
-    let flush = s[0].s === s[1].s && s[1].s === s[2].s;
-    let straight = (s[0].v - s[1].v === 1 && s[1].v - s[2].v === 1) || (s[0].v === 14 && s[1].v === 3 && s[2].v === 2);
-    let trail = s[0].v === s[1].v && s[1].v === s[2].v;
-    let pair = s[0].v === s[1].v || s[1].v === s[2].v;
-    if (trail) return { score: 600 + s[0].v, name: "Trail" };
-    if (flush && straight) return { score: 500 + s[0].v, name: "Pure Sequence" };
-    if (straight) return { score: 400 + s[0].v, name: "Sequence" };
-    if (flush) return { score: 300 + s[0].v, name: "Color" };
-    if (pair) return { score: 200 + s[1].v, name: "Pair" };
-    return { score: 100 + s[0].v, name: "High Card" };
+  let deg = 0;
+  function spinLuckyWheel() {
+    deg += 1440 + Math.floor(Math.random() * 360);
+    document.getElementById("wheelDisc").style.transform = `rotate(${deg}deg)`;
+    setTimeout(() => {
+      const won = [10, 25, 50][Math.floor(Math.random() * 3)];
+      updateBal(balance + won);
+      alert(`🎡 Lucky Wheel में आपको ₹${won} बोनस मिला!`);
+    }, 3100);
   }
+
+  /* ================= 5-PLAYER CASINO TABLE CONTROLLER ================= */
+  let boot = 10, stake = 10, pot = 50, isSeen = false, roundNo = 1, myTriple = null, ops = [];
 
   function spawnChip(val) {
     const colors = ["#ef4444", "#f59e0b", "#ec4899", "#10b981", "#8b5cf6"];
@@ -493,24 +613,25 @@
   function startCasinoRound() {
     if (balance < boot) { triggerTableFreeze("अगले राउंड के लिए ₹10 बूट चाहिए।"); return; }
     playBeep(850, 0.12, 'triangle');
-    let deck = [];
-    for (let s of suits) for (let r of ranks) deck.push({ s, l: r.l, v: r.v });
-    deck.sort(() => Math.random() - 0.5);
 
-    myHand = [deck.pop(), deck.pop(), deck.pop()];
+    const deck = new Deck();
+    deck.shuffle();
+
+    myTriple = new Triple(deck.top(), deck.top(), deck.top());
     isSeen = false; stake = boot; pot = boot * 5;
     updateBal(balance - boot);
 
     document.getElementById("tpRound").innerText = roundNo++;
     document.getElementById("tpPotAmt").innerText = pot.toFixed(2);
+    document.getElementById("tableStatusBanner").innerText = "सभी 5 खिलाड़ियों ने ₹10 बूट जमा किया। आपकी चाल!";
     document.getElementById("chipsPile").innerHTML = "";
     for (let i = 0; i < 5; i++) spawnChip(boot);
 
     ops = [
-      { name: "Lakhvir San...", avatar: "👵", bet: boot, cards: [deck.pop(), deck.pop(), deck.pop()], status: "Blind", packed: false },
-      { name: "phone862289...", avatar: "👧", bet: boot, cards: [deck.pop(), deck.pop(), deck.pop()], status: "Blind", packed: false },
-      { name: "phone862206...", avatar: "🧔", bet: boot, cards: [deck.pop(), deck.pop(), deck.pop()], status: "Seen", packed: false },
-      { name: "guest383331...", avatar: "🐘", bet: boot, cards: [deck.pop(), deck.pop(), deck.pop()], status: "Seen", packed: false }
+      { name: "Lakhvir San...", avatar: "👵", bet: boot, triple: new Triple(deck.top(), deck.top(), deck.top()), status: "Blind", packed: false },
+      { name: "phone862289...", avatar: "👧", bet: boot, triple: new Triple(deck.top(), deck.top(), deck.top()), status: "Blind", packed: false },
+      { name: "phone862206...", avatar: "🧔", bet: boot, triple: new Triple(deck.top(), deck.top(), deck.top()), status: "Seen", packed: false },
+      { name: "guest383331...", avatar: "🐘", bet: boot, triple: new Triple(deck.top(), deck.top(), deck.top()), status: "Seen", packed: false }
     ];
 
     renderMyFan(false);
@@ -521,14 +642,13 @@
   function renderMyFan(show) {
     const fan = document.getElementById("myCardFan");
     fan.innerHTML = "";
-    myHand.forEach(c => {
+    myTriple.hand.forEach(c => {
       const div = document.createElement("div");
       if (!show) {
         div.className = "t-card back";
       } else {
-        const isRed = c.s === "♥" || c.s === "♦";
-        div.className = "t-card" + (isRed ? " red-suit" : "");
-        div.innerHTML = `<div>${c.l}<br>${c.s}</div>`;
+        div.className = "t-card" + (c.is_red() ? " red-suit" : "");
+        div.innerHTML = `<div>${c.get_name()}<br>${c.get_suit_symbol()}</div>`;
       }
       fan.appendChild(div);
     });
@@ -538,7 +658,7 @@
       fan.appendChild(b);
     } else {
       const r = document.createElement("div");
-      r.className = "rank-strip"; r.innerText = evaluateCards(myHand).name;
+      r.className = "rank-strip"; r.innerText = myTriple.label;
       fan.appendChild(r);
     }
   }
@@ -583,7 +703,7 @@
     let activeCount = 0;
     ops.forEach(op => {
       if (op.packed) return;
-      if (evaluateCards(op.cards).score < 112 && Math.random() > 0.55 && activeCount > 1) op.packed = true;
+      if (op.triple.score < 1011 && Math.random() > 0.55 && activeCount > 1) op.packed = true;
       else {
         const pay = op.status === "Seen" ? cost : Math.max(boot, cost / 2);
         op.bet += pay; pot += pay; spawnChip(pay); activeCount++;
@@ -591,13 +711,15 @@
     });
 
     document.getElementById("tpPotAmt").innerText = pot.toFixed(2);
+    document.getElementById("tableStatusBanner").innerText = `आपने ₹${cost} की चाल चली! पॉट: ₹${pot}`;
     renderSeats();
     if (activeCount === 0) showCardsBattle();
   }
 
   function packRound() {
     playBeep(300, 0.15);
-    setTimeout(startCasinoRound, 1200);
+    document.getElementById("tableStatusBanner").innerText = "आपने पत्ते पैक किए। नया राउंड शुरू हो रहा है...";
+    setTimeout(startCasinoRound, 1400);
   }
 
   function showCardsBattle() {
@@ -608,20 +730,28 @@
 
     setTimeout(() => {
       beam.style.display = "none";
-      const myScore = evaluateCards(myHand).score;
-      let bestOp = 0;
-      ops.forEach(o => { if (!o.packed) bestOp = Math.max(bestOp, evaluateCards(o.cards).score); });
+      const myScore = myTriple.score;
+      let bestOp = 0, winnerName = "आप";
+      ops.forEach(o => {
+        if (!o.packed && o.triple.score > bestOp) {
+          bestOp = o.triple.score;
+          if (bestOp > myScore) winnerName = o.name;
+        }
+      });
 
       if (myScore >= bestOp) {
         const netWin = pot * 0.999; // 0.1% commission
         updateBal(balance + netWin);
+        document.getElementById("tableStatusBanner").innerText = `🎉 ${myTriple.label} से आप ₹${netWin.toFixed(2)} जीते!`;
         [523, 659, 784, 1046].forEach((f, idx) => setTimeout(() => playBeep(f, 0.2), idx * 100));
         fetch(`${BACKEND_URL}/api/game/settle`, {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: "9706842026", gameType: "TEEN_PATTI_CASINO", betAmount: boot, wonAmount: netWin })
+          body: JSON.stringify({ userId: "9706842026", gameType: "TEEN_PATTI_VIP", betAmount: boot, wonAmount: netWin })
         }).catch(() => {});
+      } else {
+        document.getElementById("tableStatusBanner").innerText = `❌ ${winnerName} ने यह शो जीता! अगला राउंड...`;
       }
-      setTimeout(startCasinoRound, 1800);
+      setTimeout(startCasinoRound, 2200);
     }, 1100);
   }
 
